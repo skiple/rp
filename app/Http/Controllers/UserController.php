@@ -32,13 +32,35 @@ class UserController extends Controller
 
     	$new_user->save();
 
+    	//try login using new account
     	if (Auth::loginUsingId($new_user->id_user)) {
-		    // The user is active, not suspended, and exists.
-		    return $request->user();
 		    return back();
 		}
 		else{
-			return 1;
+			return redirect('/');
 		}
+    }
+
+    public function postSignIn(Request $request){
+    	$this->validate($request, [
+	        'email' => 'required|email',
+	        'password' => 'required',
+	    ]);
+
+    	if (Auth::attempt([
+    			'email' => $request['email'], 
+    			'password' => $request['password']
+    		])) {
+            // Authentication passed...
+            return back();
+        }
+        else{
+        	return "Username / Password salah";
+        }
+    }
+
+    public function logout(Request $request){
+    	Auth::logout();
+    	return back();
     }
 }

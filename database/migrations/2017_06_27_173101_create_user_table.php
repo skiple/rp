@@ -22,7 +22,9 @@ class CreateUserTable extends Migration
             $table->string('phone', 16);
             $table->date('birthdate');
             $table->longText('about_me')->nullable();
+            $table->integer('isAdmin')->default(0);
             $table->timestamps();
+            $table->string('remember_token', 255)->nullable();
         });
     }
 

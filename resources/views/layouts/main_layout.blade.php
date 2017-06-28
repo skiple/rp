@@ -17,7 +17,12 @@
                 <a class="navbar-brand" href="#">Rentuff People</a>
             </div>
             <ul class="nav navbar-nav">
+            @if(isset(Auth::user()->email))
+                <!-- a already has default padding top 14px. so if padding-top isn't declared here, the padding will be doubled (28px) -->
+                <li><a style="padding-top:0px" href="/logout">logout</a></li>
+            @else
                 <li class="login">Log In</li>
+            @endif
             </ul>
         </div>
     </nav>
@@ -28,7 +33,7 @@
       <div class="modal-content">
         <span class="close">&times;</span>
         <br><br>
-        <form id="login-form" action="" method="post" role="form" style="display: block; font-family:Arial !important;">
+        <form id="login-form" action="{{ route('sign_in') }}" method="post" role="form" style="display: block; font-family:Arial !important;">
             <div class="form-group">
                 <input type="text" name="email" tabindex="1" class="form-control" placeholder="Email Address" value="">
             </div>

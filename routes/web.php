@@ -15,7 +15,16 @@ Route::get('/', function () {
     return view('home');
 });
 
+Route::get('logout', [
+	'uses' => 'UserController@logout',
+]);
+
 Route::post('postSignUp', [
 	'uses' => 'UserController@postSignUp',
 	'as' => 'sign_up'
+]);
+
+Route::post('postSignIn', [
+	'uses' => 'UserController@postSignIn',
+	'as' => 'sign_in'
 ]);
