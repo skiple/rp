@@ -7,6 +7,12 @@
 
     <title>Rentuff People</title>
 
+    <!-- add jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+    </script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js" type="text/javascript"></script>
+    </script>
+
     <!-- CSS And JavaScript -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css">
 </head>

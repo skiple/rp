@@ -11,9 +11,13 @@
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-});
+Route::get('/', [
+	'uses' => 'ActivityController@viewActivityCatalog',
+]);
+
+Route::get('/add_activity', [
+	'uses' => 'AdminActivityController@viewAddActivity',
+]);
 
 Route::get('logout', [
 	'uses' => 'UserController@logout',
