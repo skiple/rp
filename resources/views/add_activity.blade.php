@@ -1,8 +1,10 @@
 @extends('layouts.main_layout')
 
 @section('content')
-    <!-- multistep form -->
-    <form method="post" enctype="multipart/form-data">
+    @foreach ($errors->all() as $error)
+        {{ $error }}<br>
+    @endforeach
+    <form action="{{ route('add_activity') }}" method="post" enctype="multipart/form-data">
       <!-- fieldsets -->
       <fieldset>
         <h4 class="fs-title">Berikan Judul Aktivitas</h4>
@@ -28,8 +30,7 @@
       <br>
       <fieldset>
         <h4 class="fs-title">Deskripsi Aktivitas</h4>
-        <textarea rows="4" cols="50" name="description">
-        </textarea>
+        <textarea rows="4" cols="50" name="description"></textarea>
       </fieldset>
       <br>
       <fieldset>
@@ -55,21 +56,20 @@
       <br>
       <fieldset>
         <h4 class="fs-title">Apa yang akan disediakan?</h4>
-        <textarea rows="4" cols="50" name="provide">
-        </textarea>
+        <textarea rows="4" cols="50" name="provide"></textarea>
       </fieldset>
       <br>
       <fieldset>
         <h4 class="fs-title">Lokasi</h4>
-        <textarea rows="4" cols="50" name="location">
-        </textarea>
+        <textarea rows="4" cols="50" name="location"></textarea>
       </fieldset>
       <br>
       <fieldset>
-        <h4 class="fs-title">Itenary</h4>
-        <textarea rows="4" cols="50" name="itenary">
-        </textarea>
+        <h4 class="fs-title">Itinerary</h4>
+        <textarea rows="4" cols="50" name="itinerary"></textarea>
       </fieldset>
       <br>
+      <input type="hidden" name="_token" value="{{ Session::token() }}">
+      <input type="submit" value="Submit">
     </form>
 @endsection
