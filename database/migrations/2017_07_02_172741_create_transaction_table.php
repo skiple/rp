@@ -20,6 +20,7 @@ class CreateTransactionTable extends Migration
             $table->unsignedInteger('id_user');
             $table->integer('quantity');
             $table->integer('total_price');
+            $table->tinyInteger('status');
             $table->timestamps();
         });
     }

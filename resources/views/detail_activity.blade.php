@@ -109,12 +109,14 @@
 		}
 
 		function nextPage(){
-			var input_quantity = document.forms["create_transaction"]["quantity"].value;
+			var input_quantity = Number(document.forms["create_transaction"]["quantity"].value);
 			var input_date = participants>0;
 
 			if(input_quantity && input_date){
 				@if(isset(Auth::user()->email))
 					if(participants < input_quantity){
+						alert(participants);
+						alert(input_quantity);
 						alert('Slot yang tersedia tidak mencukupi');
 					}
 					else{

@@ -14,6 +14,7 @@
       @foreach($all_transactions as $transaction)
         <tr>
           <td>ID Transaksi {{$transaction->id_transaction}}</td>
+          
           <td>{{$lend->motor->brand->brand_name}} {{$lend->motor->motorcycle_type}}  ({{$lend->motor->motorcycle_year}}) </td>
           <td>{{$lend->user->first_name}} {{$lend->user->last_name}}</td>
           <td>{{$lend->price}}</td>

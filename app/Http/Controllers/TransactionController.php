@@ -35,6 +35,7 @@ class TransactionController extends Controller
 	    $total_price = $price * $request['quantity'];
 	    $new_transaction->total_price = $total_price;
 
+	    $new_transaction->status = 0;
 	    $new_transaction->created_at = Carbon::now('Asia/Jakarta');
 	    $new_transaction->save();
 
