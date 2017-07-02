@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateActivityDateTable extends Migration
+class CreateActivityTimeTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class CreateActivityDateTable extends Migration
      */
     public function up()
     {
-        Schema::create('tb_activity_date', function (Blueprint $table) {
-            $table->increments('id_activity_date');
-            $table->unsignedInteger('id_activity');
-            $table->date('date');
+        Schema::create('tb_activity_time', function (Blueprint $table) {
+            $table->increments('id_activity_time');
+            $table->unsignedInteger('id_activity_date');
+            $table->integer('day');
+            $table->time('time_start');
+            $table->time('time_end');
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ class CreateActivityDateTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tb_activity_date');
+        Schema::dropIfExists('tb_activity_time');
     }
 }

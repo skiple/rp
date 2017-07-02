@@ -21,10 +21,10 @@ class CreateActivityTable extends Migration
             $table->tinyInteger('duration');
             $table->longText('description');
             $table->integer('max_participants');
-            $table->string('photo1', 64);
-            $table->string('photo2', 64);
-            $table->string('photo3', 64);
-            $table->string('photo4', 64);
+            $table->string('photo1', 64)->default(NULL)->nullable();
+            $table->string('photo2', 64)->default(NULL)->nullable();
+            $table->string('photo3', 64)->default(NULL)->nullable();
+            $table->string('photo4', 64)->default(NULL)->nullable();
             $table->integer('price');
             $table->longText('provide');
             $table->string('location', 100);

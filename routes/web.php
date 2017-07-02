@@ -29,11 +29,16 @@ Route::get('public/images/{type}/{filename}', function ($type, $filename)
     return $response;
 });
 
+//Activity Controller Routes
 Route::get('/', [
 	'uses' => 'ActivityController@viewActivityCatalog',
 ]);
 
-//Activity Controller Routes
+Route::get('/detail/activity/{id}', [
+	'uses' => 'ActivityController@viewDetailActivity',
+]);
+
+//Admin Activity Controller Routes
 Route::get('/add_activity', [
 	'uses' => 'AdminActivityController@viewAddActivity',
 ]);
@@ -56,4 +61,14 @@ Route::post('postSignUp', [
 Route::post('postSignIn', [
 	'uses' => 'UserController@postSignIn',
 	'as' => 'sign_in'
+]);
+
+//Transaction Controller Routes
+Route::get('transactions', [
+	'uses' => 'TransactionController@viewTransactions',
+]);
+
+Route::post('postCreateTransaction', [
+	'uses' => 'TransactionController@postCreateTransaction',
+	'as' => 'create_transaction'
 ]);

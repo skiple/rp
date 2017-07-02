@@ -4,23 +4,23 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Activity extends Model
+class Transaction extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'tb_activity';
+    protected $table = 'tb_transaction';
 
-    protected $primaryKey = 'id_activity';
+    protected $primaryKey = 'id_transaction';
     
     /**
      * The attributes that aren't mass assignable.
      *
      * @var array
      */
-    protected $guarded = ['id_activity'];
+    protected $guarded = ['id_transaction'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -30,12 +30,4 @@ class Activity extends Model
     protected $hidden = [
         'created_at', 'updated_at',
     ];
-
-    /**
-     * Get the dates for the activity.
-     */
-    public function dates()
-    {
-        return $this->hasMany('App\Activity_date', 'id_activity');
-    }
 }

@@ -11,7 +11,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
     </script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js" type="text/javascript"></script>
-    </script>
+
+    <!-- datepicker css js -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <!-- CSS And JavaScript -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css">
@@ -86,7 +89,7 @@
                 <input type="text" name="phone" tabindex="1" class="form-control" placeholder="Phone Number" value="">
             </div>
             <div class="form-group">
-                <input type="text" name="birthday" tabindex="1" class="form-control" onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="Birthday" value="">
+                <input type="text" id="datepicker" name="birthday" tabindex="1" class="form-control" placeholder="Birthday" value="">
             </div>
             <div class="form-group">
                 <input type="password" name="password" tabindex="2" class="form-control" placeholder="Create Password">
@@ -169,5 +172,12 @@
         }
 
     }
+</script>
+<script>
+    $( function() {
+        $( "#datepicker" ).datepicker({
+            dateFormat: "dd MM yy"
+        });
+    } );
 </script>
 </html>

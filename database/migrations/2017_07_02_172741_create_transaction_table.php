@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateActivityDateTable extends Migration
+class CreateTransactionTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,13 @@ class CreateActivityDateTable extends Migration
      */
     public function up()
     {
-        Schema::create('tb_activity_date', function (Blueprint $table) {
-            $table->increments('id_activity_date');
+        Schema::create('tb_transaction', function (Blueprint $table) {
+            $table->increments('id_transaction');
             $table->unsignedInteger('id_activity');
-            $table->date('date');
+            $table->unsignedInteger('id_activity_date');
+            $table->unsignedInteger('id_user');
+            $table->integer('quantity');
+            $table->integer('total_price');
             $table->timestamps();
         });
     }
@@ -28,6 +31,6 @@ class CreateActivityDateTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tb_activity_date');
+        Schema::dropIfExists('tb_transaction');
     }
 }

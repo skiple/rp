@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Activity;
 use Illuminate\Http\Request;
+use App\Activity;
+use App\Activity_date;
+use App\Activity_time;
+
 use Storage;
+use Carbon\Carbon;
 
 class AdminActivityController extends Controller
 {
@@ -25,15 +29,27 @@ class AdminActivityController extends Controller
 	        'duration' => 'required|numeric',
 	        'description' => 'required',
 	        'max_participants' => 'required|numeric',
-	        'photo1' => 'required|image',
-	        'photo2' => 'required|image',
-	        'photo3' => 'required|image',
-	        'photo4' => 'required|image',
-	        'price' => 'required|numeric',
+	        'photo1' => 'image',
+	        'photo2' => 'image',
+	        'photo3' => 'image',
+	        'photo4' => 'image',
+	        'price' => 'required',
 	        'provide' => 'required',
 	        'location' => 'required|max:100',
 	        'itinerary' => 'required',
 	    ]);
+
+	    for($i=1; $i<=$request['date_count']; $i++){
+	    	$this->validate($request, [
+	        	'date_from' . $i => 'required',
+	    	]);
+	    	for($j=1; $j<=$request['duration']; $j++){
+	    		$this->validate($request, [
+		        	'time_start' . $i . '-' . $j => 'required',
+		        	'time_end' . $i . '-' . $j => 'required',
+		    	]);
+	    	}
+	    }
 
 	    $new_activity = new Activity();
 	    $new_activity->activity_name	= $request['activity_name'];
@@ -41,17 +57,52 @@ class AdminActivityController extends Controller
 	    $new_activity->host_profile 	= $request['host_profile'];
 	    $new_activity->duration 		= $request['duration'];
 	    $new_activity->description 		= $request['description'];
-	    $new_activity->max_participants = $request['max_participants'];
-	    $new_activity->photo1 			= "temp";
-	    $new_activity->photo2 			= "temp";
-	    $new_activity->photo3 			= "temp";
-	    $new_activity->photo4 			= "temp";
-	    $new_activity->price 			= $request['price'];
+
+	    $price = str_replace('.', '', $request['price']);
+	    $new_activity->price 			= $price;
+
 	    $new_activity->provide 			= $request['provide'];
 	    $new_activity->location 		= $request['location'];
 	    $new_activity->itinerary 		= $request['itinerary'];
 
+	    $new_activity->created_at = Carbon::now('Asia/Jakarta');
 	    $new_activity->save();
+
+	    for($i=1; $i<=$request['date_count']; $i++){
+	    	$new_activity_date = new Activity_date();
+	    	$new_activity_date->id_activity = $new_activity->id_activity;
+	    	$new_activity_date->max_participants = $request['max_participants'];
+
+	    	//change date from format
+	    	$req_name = 'date_from' . $i;
+	    	$date_from = Carbon::createFromFormat("d F Y", $request[$req_name], "Asia/Jakarta");
+        	$date_from = $date_from->format('Y-m-d');
+	    	$new_activity_date->date = $date_from;
+
+	    	$new_activity_date->created_at = Carbon::now('Asia/Jakarta');
+	    	$new_activity_date->save();
+
+	    	for($j=1; $j<=$request['duration']; $j++){
+	    		$new_activity_time = new Activity_time();
+	    		$new_activity_time->id_activity_date = $new_activity_date->id_activity_date;
+	    		$new_activity_time->day = $j;
+
+	    		//change time from format
+	    		$req_name = 'time_start' . $i . '-' . $j;
+		    	$time_start = Carbon::createFromFormat("H:i", $request[$req_name], "Asia/Jakarta");
+        		$time_start = $time_start->format('H:i:s');
+	    		$new_activity_time->time_start = $time_start;
+
+	    		//change time from format
+	    		$req_name = 'time_end' . $i . '-' . $j;
+		    	$time_end = Carbon::createFromFormat("H:i", $request[$req_name], "Asia/Jakarta");
+        		$time_end = $time_end->format('H:i:s');
+	    		$new_activity_time->time_end = $time_end;
+
+	    		$new_activity_time->created_at = Carbon::now('Asia/Jakarta');
+	    		$new_activity_time->save();
+	    	}
+	    }
 
 	    //file name
 	    $id 	= $new_activity->id_activity;

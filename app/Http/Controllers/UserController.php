@@ -26,9 +26,12 @@ class UserController extends Controller
     	$new_user->last_name = $request['last_name'];
     	$new_user->email = $request['email'];
     	$new_user->phone = $request['phone'];
-    	$new_user->birthdate = $request['birthday'];
+
+        $birthdate = Carbon::createFromFormat("d F Y", $request['birthday'], "Asia/Jakarta");
+        $birthdate = $birthdate->format('Y-m-d');
+    	$new_user->birthdate = $birthdate;
     	$new_user->password = bcrypt($request['password']);
-    	$new_user->created_at = Carbon::now();
+    	$new_user->created_at = Carbon::now('Asia/Jakarta');
 
     	$new_user->save();
 
