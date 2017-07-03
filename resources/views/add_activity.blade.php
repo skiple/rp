@@ -20,7 +20,7 @@
       <br>
       <fieldset>
         <h4 class="fs-title">Ceritakan singkat tentang profil pengisi</h4>
-        <input type="text" name="host_profile"/>
+        <textarea rows="4" cols="50" name="host_profile"></textarea>
       </fieldset>
       <br>
       <fieldset>
@@ -143,7 +143,7 @@
                 }));
 
                 $('#datetime').append($('<input>', { 
-                    type    : 'text',
+                    type    : 'time',
                     name    : 'time_start' + date_count + '-' + i,
                 }));
 
@@ -153,7 +153,7 @@
                 }));
 
                 $('#datetime').append($('<input>', { 
-                    type    : 'text',
+                    type    : 'time',
                     name    : 'time_end' + date_count + '-' + i,
                 }));
 
