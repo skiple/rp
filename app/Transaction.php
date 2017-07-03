@@ -30,4 +30,36 @@ class Transaction extends Model
     protected $hidden = [
         'created_at', 'updated_at',
     ];
+
+    /**
+     * Get the activity of the transaction.
+     */
+    public function activity()
+    {
+        return $this->belongsTo('App\Activity', 'id_activity');
+    }
+
+    /**
+     * Get the activity date of the transaction.
+     */
+    public function activity_date()
+    {
+        return $this->belongsTo('App\Activity_date', 'id_activity_date');
+    }
+
+    /**
+     * Get the user of the transaction.
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\User', 'id_user');
+    }
+
+    /**
+     * Get the payment of the transaction.
+     */
+    public function payment()
+    {
+        return $this->hasOne('App\Transaction_payment', 'id_transaction');
+    }
 }

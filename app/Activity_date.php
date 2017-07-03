@@ -46,4 +46,12 @@ class Activity_date extends Model
     {
         return $this->hasMany('App\Activity_time', 'id_activity_date');
     }
+
+    /**
+     * Get the transactions for the activity date.
+     */
+    public function transactions()
+    {
+        return $this->hasMany('App\Transaction', 'id_activity_date');
+    }
 }

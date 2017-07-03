@@ -72,3 +72,22 @@ Route::post('postCreateTransaction', [
 	'uses' => 'TransactionController@postCreateTransaction',
 	'as' => 'create_transaction'
 ]);
+
+Route::get('confirm_payment/{id}', [
+	'uses' => 'TransactionController@viewConfirmPayment',
+]);
+
+Route::post('postCreatePayment', [
+	'uses' => 'TransactionController@postCreatePayment',
+	'as' => 'create_payment'
+]);
+
+//Admin Transaction Controller Routes
+Route::get('/admin/transactions', [
+	'uses' => 'AdminTransactionController@viewTransactions',
+]);
+
+Route::post('add_activity', [
+	'uses' => 'AdminActivityController@postAddActivity',
+	'as' => 'add_activity'
+]);

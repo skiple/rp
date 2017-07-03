@@ -16,7 +16,7 @@ class ActivityController extends Controller
     	$data = array(
     		'all_activity' => $all_activity,
     	);
-    	return view('home')->with($data);
+    	return view('user.home')->with($data);
     }
 
     //view detail activity
@@ -25,6 +25,6 @@ class ActivityController extends Controller
     	$data = array(
     		'activity' => $activity,
     	);
-    	return view('detail_activity')->with($data);
+    	return view('user.detail_activity')->with($data);
     }
 }

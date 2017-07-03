@@ -1,26 +1,26 @@
 <?php
+
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class Transaction_payment extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'tb_user';
+    protected $table = 'tb_transaction_payment';
 
-    protected $primaryKey = 'id_user';
+    protected $primaryKey = 'id_transaction_payment';
     
     /**
      * The attributes that aren't mass assignable.
      *
      * @var array
      */
-    protected $guarded = ['id_user'];
+    protected $guarded = ['id_transaction_payment'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -28,14 +28,14 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'created_at', 'updated_at',
+        'created_at', 'updated_at',
     ];
 
     /**
-     * Get the transactions for the user.
+     * Get the transaction of the payment.
      */
-    public function transactions()
+    public function transaction()
     {
-        return $this->hasMany('App\Transaction', 'id_user');
+        return $this->belongsTo('App\Transaction', 'id_transaction');
     }
 }

@@ -20,7 +20,7 @@ class CreateTransactionTable extends Migration
             $table->unsignedInteger('id_user');
             $table->integer('quantity');
             $table->integer('total_price');
-            $table->tinyInteger('status');
+            $table->tinyInteger('status')->comment('0: Belum bayar, 1: Menunggu Konfirmasi, 2: Sudah bayar, 3: Selesai, -1: Batal');
             $table->timestamps();
         });
     }
