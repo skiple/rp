@@ -89,14 +89,12 @@ class AdminActivityController extends Controller
 
 	    		//change time from format
 	    		$req_name = 'time_start' . $i . '-' . $j;
-	    		echo $request[$req_name];
 		    	$time_start = Carbon::createFromFormat("H:i", $request[$req_name], "Asia/Jakarta");
         		$time_start = $time_start->format('H:i:s');
 	    		$new_activity_time->time_start = $time_start;
 
 	    		//change time from format
 	    		$req_name = 'time_end' . $i . '-' . $j;
-	    		echo $req_name;
 		    	$time_end = Carbon::createFromFormat("H:i", $request[$req_name], "Asia/Jakarta");
         		$time_end = $time_end->format('H:i:s');
 	    		$new_activity_time->time_end = $time_end;
