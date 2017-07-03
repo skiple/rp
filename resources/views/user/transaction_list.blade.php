@@ -15,7 +15,11 @@
     <tbody>
       @foreach($all_transactions as $transaction)
         <tr>
-          <td>ID Transaksi {{$transaction->id_transaction}}</td>
+          <td>ID Transaksi 
+            <a href="admin/detail/transaction/{{$transaction->id_transaction}}">
+              {{$transaction->id_transaction}}
+            </a>
+          </td>
           <td>{{$transaction->created_at}}</td>
           <td>{{$transaction->activity->activity_name}}</td>
           <td>{{$transaction->total_price}}</td>

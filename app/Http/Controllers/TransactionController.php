@@ -83,9 +83,19 @@ class TransactionController extends Controller
 	    $new_transaction_payment->save();
 
 	    $transaction = Transaction::where('id_transaction', $request['id_transaction'])->first();
+	    $transaction->updated_at = Carbon::now('Asia/Jakarta');
 	    $transaction->status = 1;
 	    $transaction->save();
 
 	    return redirect('transactions');
+    }
+
+    //view detail transaction
+    public function viewDetailTransaction($id){
+    	$transaction = Transaction::where('id_transaction', $id)->first();
+    	$data = array(
+    		'transaction' => $transaction,
+    	);
+    	return view('user.detail_transaction')->with($data);
     }
 }

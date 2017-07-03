@@ -82,12 +82,23 @@ Route::post('postCreatePayment', [
 	'as' => 'create_payment'
 ]);
 
+Route::get('detail/transaction/{id}', [
+	'uses' => 'TransactionController@viewDetailTransaction',
+]);
+
 //Admin Transaction Controller Routes
 Route::get('/admin/transactions', [
 	'uses' => 'AdminTransactionController@viewTransactions',
 ]);
 
-Route::post('add_activity', [
-	'uses' => 'AdminActivityController@postAddActivity',
-	'as' => 'add_activity'
+Route::get('admin/detail/transaction/{id}', [
+	'uses' => 'AdminTransactionController@viewDetailTransaction',
+]);
+
+Route::get('admin/accept_payment/{id}', [
+	'uses' => 'AdminTransactionController@acceptPayment',
+]);
+
+Route::get('admin/reject_payment/{id}', [
+	'uses' => 'AdminTransactionController@rejectPayment',
 ]);
