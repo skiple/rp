@@ -20,7 +20,7 @@
         <input type="text" name="amount"/>
       </fieldset>
       <fieldset>
-        <h4 class="fs-title">Dari Bank</h4>
+        <h4 class="fs-title">Bank Tujuan</h4>
         <select name="bank">
           <option> BCA </option>
           <option> Mandiri </option>

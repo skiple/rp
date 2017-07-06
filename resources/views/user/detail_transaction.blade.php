@@ -54,7 +54,7 @@
     	<br><br>
     	Jumlah transfer: {{$transaction->payment->amount}}
     	<br><br>
-    	Bank: {{$transaction->payment->bank}}
+    	Bank Tujuan: {{$transaction->payment->bank}}
         <br><br>
     @endif
 @endsection
