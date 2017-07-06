@@ -49,6 +49,7 @@ class TransactionController extends Controller
 
 	    $new_transaction->status = 0;
 	    $new_transaction->created_at = Carbon::now('Asia/Jakarta');
+	    $new_transaction->updated_at = Carbon::now('Asia/Jakarta');
 	    $new_transaction->save();
 
 	    return redirect('transactions');
@@ -86,6 +87,7 @@ class TransactionController extends Controller
     	$new_transaction_payment->transfer_date = $transfer_date;
 
 	    $new_transaction_payment->created_at = Carbon::now('Asia/Jakarta');
+	    $new_transaction_payment->updated_at = Carbon::now('Asia/Jakarta');
 	    $new_transaction_payment->save();
 
 	    $transaction = Transaction::where('id_transaction', $request['id_transaction'])->first();
