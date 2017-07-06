@@ -44,14 +44,17 @@
     --------------------------------------------------------
     <br><br>
     @if($transaction->status>0)
-    	Email: {{$transaction->payment->email}}
+    	Nama: {{$transaction->payment->account_name}}
     	<br><br>
-    	Nama: {{$transaction->payment->name}}
-    	<br><br>
+        From bank: {{$transaction->payment->from_bank}}
+        <br><br>
+        Transfer date: {{$transaction->payment->transfer_date}}
+        <br><br>
     	Nomor telepon: {{$transaction->payment->phone}}
     	<br><br>
     	Jumlah transfer: {{$transaction->payment->amount}}
     	<br><br>
     	Bank: {{$transaction->payment->bank}}
+        <br><br>
     @endif
 @endsection

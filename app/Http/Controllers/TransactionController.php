@@ -63,21 +63,27 @@ class TransactionController extends Controller
 
     public function postCreatePayment(Request $request){
     	$this->validate($request, [
-	        'name' 			 => 'required|alpha|max:64',
-	        'email' 		 => 'required|email|max:64',
+	        'account_name'   => ['required','regex:/^[a-zA-Z ]*$/','max:64'],
+	        'from_bank' 	 => 'required|max:64',
 	        'phone' 		 => 'required|numeric',
 	        'amount' 		 => 'required',
 	        'bank' 			 => 'required',
+	        'transfer_date'  => 'required|date',
 	        'id_transaction' => 'required|numeric',
 	    ]);
 
 	    $new_transaction_payment = new Transaction_payment();
 	    $new_transaction_payment->id_transaction = $request['id_transaction'];
-	    $new_transaction_payment->name = $request['name'];
-	    $new_transaction_payment->email = $request['email'];
+	    $new_transaction_payment->account_name = $request['account_name'];
+	    $new_transaction_payment->from_bank = $request['from_bank'];
 	    $new_transaction_payment->phone = $request['phone'];
 	    $new_transaction_payment->amount = $request['amount'];
 	    $new_transaction_payment->bank = $request['bank'];
+
+	    //Change format of transfer date
+	    $transfer_date = Carbon::createFromFormat("d F Y", $request['transfer_date'], "Asia/Jakarta");
+        $transfer_date = $transfer_date->format('Y-m-d');
+    	$new_transaction_payment->transfer_date = $transfer_date;
 
 	    $new_transaction_payment->created_at = Carbon::now('Asia/Jakarta');
 	    $new_transaction_payment->save();
