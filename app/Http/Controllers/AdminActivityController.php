@@ -67,6 +67,7 @@ class AdminActivityController extends Controller
 	    $new_activity->itinerary 		= $request['itinerary'];
 
 	    $new_activity->created_at = Carbon::now('Asia/Jakarta');
+	    $new_activity->updated_at = Carbon::now('Asia/Jakarta');
 	    $new_activity->save();
 
 	    for($i=1; $i<=$request['date_count']; $i++){
@@ -81,6 +82,7 @@ class AdminActivityController extends Controller
 	    	$new_activity_date->date = $date_from;
 
 	    	$new_activity_date->created_at = Carbon::now('Asia/Jakarta');
+	    	$new_activity_date->updated_at = Carbon::now('Asia/Jakarta');
 	    	$new_activity_date->save();
 
 	    	for($j=1; $j<=$request['duration']; $j++){
@@ -101,6 +103,7 @@ class AdminActivityController extends Controller
 	    		$new_activity_time->time_end = $time_end;
 
 	    		$new_activity_time->created_at = Carbon::now('Asia/Jakarta');
+	    		$new_activity_time->updated_at = Carbon::now('Asia/Jakarta');
 	    		$new_activity_time->save();
 	    	}
 	    }
