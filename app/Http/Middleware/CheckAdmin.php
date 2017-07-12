@@ -15,6 +15,16 @@ class CheckAdmin
      */
     public function handle($request, Closure $next)
     {
+        if ($request->user()->isAdmin == 0) {
+            // return Unauthorized (401) if the authenticated user is not an admin
+            $json = json_encode(array(
+                'status'  => 0,
+                'message' => "Unauthorized"
+            ));
+
+            return response()->json($json, 401);
+        }
+        
         return $next($request);
     }
 }
