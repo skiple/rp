@@ -37,7 +37,13 @@ Route::group(['namespace'=>'Api','middleware'=>['auth:api']], function() {
 });
 
 Route::group(['namespace'=>'Api','middleware'=>['auth:api','check_admin']], function() {
-    // Transaction module routes
+    // Admin activity module routes
     Route::get('/admin/activity', 'AdminActivityModule@getAddActivity');
     Route::post('/admin/activity', 'AdminActivityModule@createActivity');
+
+    // Admin transaction module routes
+    Route::get('/admin/transaction', 'AdminTransactionModule@getAllTransactions');
+    Route::get('/admin/transaction/{id}', 'AdminTransactionModule@getTransaction');
+    Route::post('/admin/transaction/payment/accept/{id}', 'AdminTransactionModule@acceptPayment');
+    Route::post('/admin/activity/payment/reject/{id}', 'AdminTransactionModule@rejectPayment');
 });
