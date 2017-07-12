@@ -50,11 +50,20 @@ class AdminTransactionModule extends Controller
 
     public function getTransaction(Request $request, $id)
     {
-        $transaction = Transaction::where('id_transaction', $id)->first();
+        $results = array();
 
-        $results = array(
-            'transaction' => $transaction,
-        );
+        $transaction = Transaction::where('id_transaction', $id)->first();
+        if ($transaction == NULL) {
+            // transaction data not found
+            $this->response['code']   = 404;
+            $this->response['status'] = -1;
+            $this->response['message']= "No transaction found with the specified Transaction ID.";
+        } else {
+            // get the transaction to our results
+            $results = array(
+                'transaction' => $transaction,
+            );
+        }
 
     	$this->response['result'] = json_encode($results);
         $json = $this->logResponse($this->response);
@@ -64,14 +73,24 @@ class AdminTransactionModule extends Controller
 
     public function acceptPayment(Request $request, $id)
     {
-        $transaction = Transaction::where('id_transaction', $id)->first();
-        $transaction->status = 2;
-        $transaction->updated_at = Carbon::now('Asia/Jakarta');
-        $transaction->save();
+        $results = array();
 
-        $results = array(
-            'transaction' => $transaction,
-        );
+        $transaction = Transaction::where('id_transaction', $id)->first();
+        if ($transaction == NULL) {
+            // activity data not found
+            $this->response['code']   = 404;
+            $this->response['status'] = -1;
+            $this->response['message']= "No transaction found with the specified Transaction ID.";
+        } else {
+            // update the transaction status
+            $transaction->status = 2;
+            $transaction->updated_at = Carbon::now('Asia/Jakarta');
+            $transaction->save();
+
+            $results = array(
+                'transaction' => $transaction,
+            );
+        }
 
     	$this->response['result'] = json_encode($results);
         $json = $this->logResponse($this->response);
@@ -81,16 +100,26 @@ class AdminTransactionModule extends Controller
 
     public function rejectPayment(Request $request, $id)
     {
-        $transaction = Transaction::where('id_transaction', $id)->first();
-        $transaction->status = 0;
-        $transaction->updated_at = Carbon::now('Asia/Jakarta');
-        $transaction->save();
-        
-        $transaction->payment->forceDelete();
+        $results = array();
 
-        $results = array(
-            'transaction' => $transaction,
-        );
+        $transaction = Transaction::where('id_transaction', $id)->first();
+        if ($transaction == NULL) {
+            // activity data not found
+            $this->response['code']   = 404;
+            $this->response['status'] = -1;
+            $this->response['message']= "No transaction found with the specified Transaction ID.";
+        } else {
+            // update the transaction status
+            $transaction->status = 0;
+            $transaction->updated_at = Carbon::now('Asia/Jakarta');
+            $transaction->save();
+            
+            $transaction->payment->forceDelete();
+
+            $results = array(
+                'transaction' => $transaction,
+            );
+        }
 
     	$this->response['result'] = json_encode($results);
         $json = $this->logResponse($this->response);

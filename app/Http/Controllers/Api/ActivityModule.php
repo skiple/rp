@@ -46,16 +46,26 @@ class ActivityModule extends Controller
 
     public function getActivity(Request $request, $id)
     {
+        $results = array();
+        
     	$activity = Activity::where('id_activity', $id)->first();
 
-        $dates = $activity->dates;
-        foreach ($dates as $date) {
-            $times = $date->times;
-            $date['times'] = $times;
+        if ($activity == NULL) {
+            // activity data not found
+            $this->response['code']   = 404;
+            $this->response['status'] = -1;
+            $this->response['message']= "No activity found with the specified Activity ID.";
+        } else {
+            // append the results
+            $dates = $activity->dates;
+            foreach ($dates as $date) {
+                $times = $date->times;
+                $date['times'] = $times;
+            }
+        	$results = array(
+        		'activity' => $activity,
+        	);
         }
-    	$results = array(
-    		'activity' => $activity,
-    	);
 
     	$this->response['result'] = json_encode($results);
         $json = $this->logResponse($this->response);

@@ -54,12 +54,20 @@ class TransactionModule extends Controller
 
     public function getTransaction(Request $request, $id)
     {
-        $current_user_id = $request->user()->id_user;
-        $transaction = Transaction::where('id_transaction', $id)->first();
+        $results = array();
 
-        $results = array(
-            'transaction' => $transaction,
-        );
+        $transaction = Transaction::where('id_transaction', $id)->first();
+        if ($transaction == NULL) {
+            // transaction data not found
+            $this->response['code']   = 404;
+            $this->response['status'] = -1;
+            $this->response['message']= "No transaction found with the specified Transaction ID.";
+        } else {
+            // get the transaction to our results
+            $results = array(
+                'transaction' => $transaction,
+            );
+        }
 
         $this->response['result'] = json_encode($results);
         $json = $this->logResponse($this->response);
@@ -84,29 +92,38 @@ class TransactionModule extends Controller
             $this->response['message']= "Error in validation request.";
             $results = $validator->errors();
         } else {
-        	// validation success: create new transaction
-		    $new_transaction = new Transaction();
-		    $new_transaction->id_activity = $request['id_activity'];
-		    $new_transaction->id_activity_date = $request['date'];
-		    $new_transaction->id_user = $request->user()->id_user;
-		    $new_transaction->quantity = $request['quantity'];
+            // validate activity id first
+            $activity = Activity::find($request['id_activity']);
+            if ($activity == NULL) {
+                // transaction data not found
+                $this->response['code']   = 404;
+                $this->response['status'] = -1;
+                $this->response['message']= "No activity found with the specified Activity ID.";
+            } else {
+            	// validation success: create new transaction
+    		    $new_transaction = new Transaction();
+    		    $new_transaction->id_activity = $request['id_activity'];
+    		    $new_transaction->id_activity_date = $request['date'];
+    		    $new_transaction->id_user = $request->user()->id_user;
+    		    $new_transaction->quantity = $request['quantity'];
 
-		    //subtract the max participants
-		    $activity_date = Activity_date::where('id_activity_date', $request['date'])->first();
-		    $activity_date->max_participants -= $request['quantity'];
-		    $activity_date->save();
+    		    //subtract the max participants
+    		    $activity_date = Activity_date::where('id_activity_date', $request['date'])->first();
+    		    $activity_date->max_participants -= $request['quantity'];
+    		    $activity_date->save();
 
-		    $price = Activity::where('id_activity', $request['id_activity'])->first()->price;
-		    $total_price = $price * $request['quantity'];
-		    $new_transaction->total_price = $total_price;
+    		    $price = $activity->price;
+    		    $total_price = $price * $request['quantity'];
+    		    $new_transaction->total_price = $total_price;
 
-		    $new_transaction->status = 0;
-		    $new_transaction->created_at = Carbon::now('Asia/Jakarta');
-		    $new_transaction->save();
+    		    $new_transaction->status = 0;
+    		    $new_transaction->created_at = Carbon::now('Asia/Jakarta');
+    		    $new_transaction->save();
 
-		   	$results = array(
-		   		'transaction' => $new_transaction,
-		   	);
+    		   	$results = array(
+    		   		'transaction' => $new_transaction,
+    		   	);
+            }
         }
 
     	$this->response['result'] = json_encode($results);
@@ -148,33 +165,41 @@ class TransactionModule extends Controller
             $this->response['message']= "Error in validation request.";
             $results = $validator->errors();
         } else {
-            // create a new transaction payment
-            $new_transaction_payment = new Transaction_payment();
-            $new_transaction_payment->id_transaction = $request['id_transaction'];
-            $new_transaction_payment->account_name = $request['account_name'];
-            $new_transaction_payment->from_bank = $request['from_bank'];
-            $new_transaction_payment->phone = $request['phone'];
-            $new_transaction_payment->amount = $request['amount'];
-            $new_transaction_payment->bank = $request['bank'];
+            // validate id_transaction first
+            $transaction = Transaction::find($request['id_transaction']);
+            if ($transaction == NULL) {
+                // transaction data not found
+                $this->response['code']   = 404;
+                $this->response['status'] = -1;
+                $this->response['message']= "No transaction found with the specified Transaction ID.";
+            } else {
+                // create a new transaction payment
+                $new_transaction_payment = new Transaction_payment();
+                $new_transaction_payment->id_transaction = $request['id_transaction'];
+                $new_transaction_payment->account_name = $request['account_name'];
+                $new_transaction_payment->from_bank = $request['from_bank'];
+                $new_transaction_payment->phone = $request['phone'];
+                $new_transaction_payment->amount = $request['amount'];
+                $new_transaction_payment->bank = $request['bank'];
 
-            //Change format of transfer date
-            $transfer_date = Carbon::createFromFormat("Y-m-d", $request['transfer_date'], "Asia/Jakarta");
-            $transfer_date = $transfer_date->format('Y-m-d');
-            $new_transaction_payment->transfer_date = $transfer_date;
+                //Change format of transfer date
+                $transfer_date = Carbon::createFromFormat("Y-m-d", $request['transfer_date'], "Asia/Jakarta");
+                $transfer_date = $transfer_date->format('Y-m-d');
+                $new_transaction_payment->transfer_date = $transfer_date;
 
-            $new_transaction_payment->created_at = Carbon::now('Asia/Jakarta');
-            $new_transaction_payment->updated_at = Carbon::now('Asia/Jakarta');
-            $new_transaction_payment->save();
+                $new_transaction_payment->created_at = Carbon::now('Asia/Jakarta');
+                $new_transaction_payment->updated_at = Carbon::now('Asia/Jakarta');
+                $new_transaction_payment->save();
 
-            $transaction = Transaction::where('id_transaction', $request['id_transaction'])->first();
-            $transaction->updated_at = Carbon::now('Asia/Jakarta');
-            $transaction->status = 1;
-            $transaction->save();
+                $transaction->updated_at = Carbon::now('Asia/Jakarta');
+                $transaction->status = 1;
+                $transaction->save();
 
-            $results = array(
-                'transaction' => $transaction,
-                'payment'     => $new_transaction_payment,
-            );
+                $results = array(
+                    'transaction' => $transaction,
+                    'payment'     => $new_transaction_payment,
+                );
+            }
         }
 
         $this->response['result'] = json_encode($results);
