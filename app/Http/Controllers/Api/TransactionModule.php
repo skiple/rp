@@ -50,6 +50,21 @@ class TransactionModule extends Controller
         return response()->json($json,$this->response['code']);
     }
 
+    public function getTransaction(Request $request, $id)
+    {
+        $current_user_id = $request->user()->id_user;
+        $transaction = Transaction::where('id_transaction', $id)->first();
+
+        $data = array(
+            'transaction' => $transaction,
+        );
+
+        $this->response['result'] = json_encode($results);
+        $json = $this->logResponse($this->response);
+
+        return response()->json($json,$this->response['code']);
+    }
+
     public function createTransaction(Request $request)
     {
     	// validation request
@@ -93,6 +108,69 @@ class TransactionModule extends Controller
         }
 
     	$this->response['result'] = json_encode($results);
+        $json = $this->logResponse($this->response);
+
+        return response()->json($json,$this->response['code']);
+    }
+
+    public function getPayment(Request $request, $id)
+    {
+        $results = array(
+            'id_transaction' => $id,
+        );
+
+        $this->response['result'] = json_encode($results);
+        $json = $this->logResponse($this->response);
+
+        return response()->json($json,$this->response['code']);
+    }
+
+    public function createPayment(Request $request)
+    {
+        // validation request
+        $results = array();
+
+        $validator  = Validator::make($request->all(),[
+            'account_name'   => ['required','regex:/^[a-zA-Z ]*$/','max:64'],
+            'from_bank'      => 'required|max:64',
+            'phone'          => 'required|numeric',
+            'amount'         => 'required',
+            'bank'           => 'required',
+            'transfer_date'  => 'required|date',
+            'id_transaction' => 'required|numeric',
+        ]);
+
+        if ($validator->fails()) {
+            $this->response['code']   = 400;
+            $this->response['status'] = 0;
+            $this->response['message']= "Error in validation request.";
+            $results = $validator->errors();
+        } else {
+            // create a new transaction payment
+            $new_transaction_payment = new Transaction_payment();
+            $new_transaction_payment->id_transaction = $request['id_transaction'];
+            $new_transaction_payment->account_name = $request['account_name'];
+            $new_transaction_payment->from_bank = $request['from_bank'];
+            $new_transaction_payment->phone = $request['phone'];
+            $new_transaction_payment->amount = $request['amount'];
+            $new_transaction_payment->bank = $request['bank'];
+
+            //Change format of transfer date
+            $transfer_date = Carbon::createFromFormat("d F Y", $request['transfer_date'], "Asia/Jakarta");
+            $transfer_date = $transfer_date->format('Y-m-d');
+            $new_transaction_payment->transfer_date = $transfer_date;
+
+            $new_transaction_payment->created_at = Carbon::now('Asia/Jakarta');
+            $new_transaction_payment->updated_at = Carbon::now('Asia/Jakarta');
+            $new_transaction_payment->save();
+
+            $transaction = Transaction::where('id_transaction', $request['id_transaction'])->first();
+            $transaction->updated_at = Carbon::now('Asia/Jakarta');
+            $transaction->status = 1;
+            $transaction->save();
+        }
+
+        $this->response['result'] = json_encode($results);
         $json = $this->logResponse($this->response);
 
         return response()->json($json,$this->response['code']);

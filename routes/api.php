@@ -13,6 +13,20 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::group(['namespace'=>'Api'],function (){
+    Route::get('/activity', 'ActivityModule@getAllActivity');
+    Route::get('/activity/{id}', 'ActivityModule@getActivity');
 });
+
+Route::group(['namespace'=>'Api','middleware'=>['auth:api']], function() {
+	// Transaction module routes
+    Route::get('/transaction', 'TransactionModule@getAllTransactions');
+    Route::get('/transaction/{id}', 'TransactionModule@getTransaction');
+    Route::post('/transaction', 'TransactionModule@createTransaction');
+    Route::get('/transaction/payment/{id}', 'TransactionModule@getPayment');
+    Route::post('/transaction/payment', 'TransactionModule@createPayment');
+ });
