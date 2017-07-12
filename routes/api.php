@@ -45,5 +45,5 @@ Route::group(['namespace'=>'Api','middleware'=>['auth:api','check_admin']], func
     Route::get('/admin/transaction', 'AdminTransactionModule@getAllTransactions');
     Route::get('/admin/transaction/{id}', 'AdminTransactionModule@getTransaction');
     Route::post('/admin/transaction/payment/accept/{id}', 'AdminTransactionModule@acceptPayment');
-    Route::post('/admin/activity/payment/reject/{id}', 'AdminTransactionModule@rejectPayment');
+    Route::post('/admin/transaction/payment/reject/{id}', 'AdminTransactionModule@rejectPayment');
 });

@@ -62,7 +62,7 @@ class UserModule extends Controller
 	    	$new_user->email = $request['email'];
 	    	$new_user->phone = $request['phone'];
 
-	        $birthdate = Carbon::createFromFormat("d F Y", $request['birthday'], "Asia/Jakarta");
+	        $birthdate = Carbon::createFromFormat("Y-m-d", $request['birthday'], "Asia/Jakarta");
 	        $birthdate = $birthdate->format('Y-m-d');
 	    	$new_user->birthdate = $birthdate;
 	    	$new_user->password = bcrypt($request['password']);
@@ -73,7 +73,7 @@ class UserModule extends Controller
 	    	$new_user->save();
 
 	    	$results = array(
-                'api_token'  => $api_token,
+                'api_token'  => $new_user->api_token,
                 'token_type' => "Bearer",
 	    		'user' 		 => $new_user,
 	    	);
@@ -102,7 +102,7 @@ class UserModule extends Controller
             $results = $validator->errors();
         } else {
         	// Authenticate
-        	if (Auth::attempt(['email' => $email, 'password' => $password])) {
+        	if (Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
         		// Authentication passed: get data
         		$api_token = str_random(255);
 

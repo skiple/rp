@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Route;
 
 use App\Activity;
 use App\Activity_date;
@@ -56,7 +57,7 @@ class TransactionModule extends Controller
         $current_user_id = $request->user()->id_user;
         $transaction = Transaction::where('id_transaction', $id)->first();
 
-        $data = array(
+        $results = array(
             'transaction' => $transaction,
         );
 
@@ -74,7 +75,7 @@ class TransactionModule extends Controller
         $validator  = Validator::make($request->all(),[
 	        'quantity' 		=> 'required|numeric',
 	        'date' 			=> 'required|numeric',
-	        'activity_id' 	=> 'required|numeric',
+	        'id_activity' 	=> 'required|numeric',
         ]);
 
         if ($validator->fails()) {
@@ -85,7 +86,7 @@ class TransactionModule extends Controller
         } else {
         	// validation success: create new transaction
 		    $new_transaction = new Transaction();
-		    $new_transaction->id_activity = $request['activity_id'];
+		    $new_transaction->id_activity = $request['id_activity'];
 		    $new_transaction->id_activity_date = $request['date'];
 		    $new_transaction->id_user = $request->user()->id_user;
 		    $new_transaction->quantity = $request['quantity'];
@@ -95,7 +96,7 @@ class TransactionModule extends Controller
 		    $activity_date->max_participants -= $request['quantity'];
 		    $activity_date->save();
 
-		    $price = Activity::where('id_activity', $request['activity_id'])->first()->price;
+		    $price = Activity::where('id_activity', $request['id_activity'])->first()->price;
 		    $total_price = $price * $request['quantity'];
 		    $new_transaction->total_price = $total_price;
 
@@ -157,7 +158,7 @@ class TransactionModule extends Controller
             $new_transaction_payment->bank = $request['bank'];
 
             //Change format of transfer date
-            $transfer_date = Carbon::createFromFormat("d F Y", $request['transfer_date'], "Asia/Jakarta");
+            $transfer_date = Carbon::createFromFormat("Y-m-d", $request['transfer_date'], "Asia/Jakarta");
             $transfer_date = $transfer_date->format('Y-m-d');
             $new_transaction_payment->transfer_date = $transfer_date;
 
@@ -169,6 +170,11 @@ class TransactionModule extends Controller
             $transaction->updated_at = Carbon::now('Asia/Jakarta');
             $transaction->status = 1;
             $transaction->save();
+
+            $results = array(
+                'transaction' => $transaction,
+                'payment'     => $new_transaction_payment,
+            );
         }
 
         $this->response['result'] = json_encode($results);

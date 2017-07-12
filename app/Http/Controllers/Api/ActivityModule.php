@@ -47,6 +47,12 @@ class ActivityModule extends Controller
     public function getActivity(Request $request, $id)
     {
     	$activity = Activity::where('id_activity', $id)->first();
+
+        $dates = $activity->dates;
+        foreach ($dates as $date) {
+            $times = $date->times;
+            $date['times'] = $times;
+        }
     	$results = array(
     		'activity' => $activity,
     	);

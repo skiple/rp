@@ -17,10 +17,10 @@ class CheckAdmin
     {
         if ($request->user()->isAdmin == 0) {
             // return Unauthorized (401) if the authenticated user is not an admin
-            $json = json_encode(array(
+            $json = array(
                 'status'  => 0,
                 'message' => "Unauthorized"
-            ));
+            );
 
             return response()->json($json, 401);
         }

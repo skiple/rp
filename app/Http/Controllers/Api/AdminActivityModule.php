@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
 
 use App\Activity;
 use App\Activity_date;
@@ -71,6 +73,23 @@ class AdminActivityModule extends Controller
             $this->response['message']= "Error in validation request.";
             $results = $validator->errors();
         } else {
+        	$new_activity = new Activity();
+		    $new_activity->activity_name	= $request['activity_name'];
+		    $new_activity->host_name 		= $request['host_name'];
+		    $new_activity->host_profile 	= $request['host_profile'];
+		    $new_activity->duration 		= $request['duration'];
+		    $new_activity->description 		= $request['description'];
+
+		    $price = str_replace('.', '', $request['price']);
+		    $new_activity->price 			= $price;
+
+		    $new_activity->provide 			= $request['provide'];
+		    $new_activity->location 		= $request['location'];
+		    $new_activity->itinerary 		= $request['itinerary'];
+
+		    $new_activity->created_at = Carbon::now('Asia/Jakarta');
+		    $new_activity->updated_at = Carbon::now('Asia/Jakarta');
+		    $new_activity->save();
         	// create new activity
         	for($i=1; $i<=$request['date_count']; $i++){
 		    	$new_activity_date = new Activity_date();
@@ -79,7 +98,7 @@ class AdminActivityModule extends Controller
 
 		    	//change date from format
 		    	$req_name = 'date_from' . $i;
-		    	$date_from = Carbon::createFromFormat("d F Y", $request[$req_name], "Asia/Jakarta");
+		    	$date_from = Carbon::createFromFormat("Y-m-d", $request[$req_name], "Asia/Jakarta");
 	        	$date_from = $date_from->format('Y-m-d');
 		    	$new_activity_date->date = $date_from;
 

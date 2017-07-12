@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
 
 use App\Transaction;
 
@@ -46,7 +48,7 @@ class AdminTransactionModule extends Controller
         return response()->json($json,$this->response['code']);
     }
 
-    public function getTransaction(Request $request)
+    public function getTransaction(Request $request, $id)
     {
         $transaction = Transaction::where('id_transaction', $id)->first();
 
