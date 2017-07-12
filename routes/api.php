@@ -35,3 +35,9 @@ Route::group(['namespace'=>'Api','middleware'=>['auth:api']], function() {
     // user module routes
 	Route::get('/logout', 'UserModule@signOut');
 });
+
+Route::group(['namespace'=>'Api','middleware'=>['auth:api','check_admin']], function() {
+    // Transaction module routes
+    Route::get('/admin/activity', 'AdminActivityModule@getAddActivity');
+    Route::post('/admin/activity', 'AdminActivityModule@createActivity');
+});
