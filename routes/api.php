@@ -20,6 +20,8 @@ use Illuminate\Http\Request;
 Route::group(['namespace'=>'Api'],function (){
     Route::get('/activity', 'ActivityModule@getAllActivity');
     Route::get('/activity/{id}', 'ActivityModule@getActivity');
+    Route::post('/signin', 'UserModule@signIn');
+    Route::post('/signup', 'UserModule@signUp');
 });
 
 Route::group(['namespace'=>'Api','middleware'=>['auth:api']], function() {
@@ -29,4 +31,7 @@ Route::group(['namespace'=>'Api','middleware'=>['auth:api']], function() {
     Route::post('/transaction', 'TransactionModule@createTransaction');
     Route::get('/transaction/payment/{id}', 'TransactionModule@getPayment');
     Route::post('/transaction/payment', 'TransactionModule@createPayment');
- });
+
+    // user module routes
+	Route::get('/logout', 'UserModule@signOut');
+});
