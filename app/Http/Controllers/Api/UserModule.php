@@ -87,6 +87,7 @@ class UserModule extends Controller
 
     public function signIn(Request $request)
     {
+        $results = array();
     	// validations for all the variables needed
         $validator  = Validator::make($request->all(),[
 	        'email' => 'required|email',
