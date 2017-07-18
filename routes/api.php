@@ -17,14 +17,14 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
-Route::group(['namespace'=>'Api','middleware'=>['cors']],function (){
+Route::group(['namespace'=>'Api'],function (){
     Route::get('/activity', 'ActivityModule@getAllActivity');
     Route::get('/activity/{id}', 'ActivityModule@getActivity');
     Route::post('/signin', 'UserModule@signIn');
     Route::post('/signup', 'UserModule@signUp');
 });
 
-Route::group(['namespace'=>'Api','middleware'=>['auth:api','cors']], function() {
+Route::group(['namespace'=>'Api','middleware'=>['auth:api']], function() {
 	// Transaction module routes
     Route::get('/transaction', 'TransactionModule@getAllTransactions');
     Route::get('/transaction/{id}', 'TransactionModule@getTransaction');
@@ -36,7 +36,7 @@ Route::group(['namespace'=>'Api','middleware'=>['auth:api','cors']], function() 
 	Route::get('/logout', 'UserModule@signOut');
 });
 
-Route::group(['namespace'=>'Api','middleware'=>['auth:api','check_admin','cors']], function() {
+Route::group(['namespace'=>'Api','middleware'=>['auth:api','check_admin']], function() {
     // Admin activity module routes
     Route::get('/admin/activity', 'AdminActivityModule@getAddActivity');
     Route::post('/admin/activity', 'AdminActivityModule@createActivity');
