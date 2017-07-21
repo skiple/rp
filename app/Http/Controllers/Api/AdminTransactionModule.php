@@ -36,11 +36,28 @@ class AdminTransactionModule extends Controller
 
     public function getAllTransactions(Request $request)
     {
-    	$all_transactions = Transaction::orderBy('updated_at', 'desc')->get();
+    	$transactions = Transaction::orderBy('updated_at', 'desc')->get();
+    	$transactions_result = array();
 
-    	$results = array(
-    		'transactions' => $all_transactions,
-    	);
+        // get all dependencies
+        foreach ($transactions as $transaction) {
+            $activity = $transaction->activity;
+            $activity_date = $transaction->activity_date;
+
+            $transaction_result = array(
+                'activity'      => $activity,
+                'activity_date' => $activity_date,
+                'quantity'      => $transaction->quantity,
+                'total_price'   => $transaction->total_price,
+                'status'        => $transaction->status,
+            );
+
+            $transactions_result[] = $transaction_result;
+        }
+
+        $results = array(
+            'transactions' => $transactions_result,
+        );
 
     	$this->response['result'] = json_encode($results);
         $json = $this->logResponse($this->response);
@@ -60,8 +77,19 @@ class AdminTransactionModule extends Controller
             $this->response['message']= "No transaction found with the specified Transaction ID.";
         } else {
             // get the transaction to our results
+            $activity = $transaction->activity;
+            $activity_date = $transaction->activity_date;
+
+            $transaction_result = array(
+                'activity'      => $activity,
+                'activity_date' => $activity_date,
+                'quantity'      => $transaction->quantity,
+                'total_price'   => $transaction->total_price,
+                'status'        => $transaction->status,
+            );
+
             $results = array(
-                'transaction' => $transaction,
+                'transaction' => $transaction_result,
             );
         }
 

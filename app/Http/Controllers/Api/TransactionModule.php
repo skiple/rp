@@ -40,10 +40,27 @@ class TransactionModule extends Controller
     public function getAllTransactions(Request $request)
     {
     	$current_user_id = $request->user()->id_user;
-    	$all_transactions = Transaction::where('id_user', $current_user_id)->orderBy('updated_at', 'desc')->get();
+    	$transactions = Transaction::where('id_user', $current_user_id)->orderBy('updated_at', 'desc')->get();
+        $transactions_result = array();
+
+        // get all dependencies
+        foreach ($transactions as $transaction) {
+            $activity = $transaction->activity;
+            $activity_date = $transaction->activity_date;
+
+            $transaction_result = array(
+                'activity'      => $activity,
+                'activity_date' => $activity_date,
+                'quantity'      => $transaction->quantity,
+                'total_price'   => $transaction->total_price,
+                'status'        => $transaction->status,
+            );
+
+            $transactions_result[] = $transaction_result;
+        }
 
     	$results = array(
-    		'transactions' => $all_transactions,
+    		'transactions' => $transactions_result,
     	);
 
     	$this->response['result'] = json_encode($results);
@@ -64,8 +81,19 @@ class TransactionModule extends Controller
             $this->response['message']= "No transaction found with the specified Transaction ID.";
         } else {
             // get the transaction to our results
+            $activity = $transaction->activity;
+            $activity_date = $transaction->activity_date;
+
+            $transaction_result = array(
+                'activity'      => $activity,
+                'activity_date' => $activity_date,
+                'quantity'      => $transaction->quantity,
+                'total_price'   => $transaction->total_price,
+                'status'        => $transaction->status,
+            );
+
             $results = array(
-                'transaction' => $transaction,
+                'transaction' => $transaction_result,
             );
         }
 
