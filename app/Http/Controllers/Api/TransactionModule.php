@@ -49,11 +49,12 @@ class TransactionModule extends Controller
             $activity_date = $transaction->activity_date;
 
             $transaction_result = array(
-                'activity'      => $activity,
-                'activity_date' => $activity_date,
-                'quantity'      => $transaction->quantity,
-                'total_price'   => $transaction->total_price,
-                'status'        => $transaction->status,
+                'id_transaction' => $transaction->id_transaction,
+                'activity'       => $activity,
+                'activity_date'  => $activity_date,
+                'quantity'       => $transaction->quantity,
+                'total_price'    => $transaction->total_price,
+                'status'         => $transaction->status,
             );
 
             $transactions_result[] = $transaction_result;
@@ -85,11 +86,12 @@ class TransactionModule extends Controller
             $activity_date = $transaction->activity_date;
 
             $transaction_result = array(
-                'activity'      => $activity,
-                'activity_date' => $activity_date,
-                'quantity'      => $transaction->quantity,
-                'total_price'   => $transaction->total_price,
-                'status'        => $transaction->status,
+                'id_transaction' => $transaction->id_transaction,
+                'activity'       => $activity,
+                'activity_date'  => $activity_date,
+                'quantity'       => $transaction->quantity,
+                'total_price'    => $transaction->total_price,
+                'status'         => $transaction->status,
             );
 
             $results = array(
