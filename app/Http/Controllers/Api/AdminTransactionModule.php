@@ -46,6 +46,7 @@ class AdminTransactionModule extends Controller
 
             $transaction_result = array(
                 'id_transaction' => $transaction->id_transaction,
+                'created_at'     => date("Y-m-d H:i:s", $transaction->created_at->timestamp),
                 'activity'       => $activity,
                 'activity_date'  => $activity_date,
                 'quantity'       => $transaction->quantity,
@@ -83,6 +84,7 @@ class AdminTransactionModule extends Controller
 
             $transaction_result = array(
                 'id_transaction' => $transaction->id_transaction,
+                'created_at'     => date("Y-m-d H:i:s", $transaction->created_at->timestamp),
                 'activity'       => $activity,
                 'activity_date'  => $activity_date,
                 'quantity'       => $transaction->quantity,
