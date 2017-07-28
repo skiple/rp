@@ -141,7 +141,7 @@ class TransactionModule extends Controller
 
     		    //subtract the max participants
     		    $activity_date = Activity_date::where('id_activity_date', $request['date'])->first();
-    		    $activity_date->max_participants -= $request['quantity'];
+    		    // $activity_date->max_participants -= $request['quantity'];
     		    $activity_date->save();
 
     		    $price = $activity->price;

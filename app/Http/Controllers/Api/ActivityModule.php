@@ -61,6 +61,7 @@ class ActivityModule extends Controller
             foreach ($dates as $date) {
                 $times = $date->times;
                 $date['times'] = $times;
+                $date['participant_left'] = $date->max_participants - $date->transactions()->sum('quantity');
             }
         	$results = array(
         		'activity' => $activity,
