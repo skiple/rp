@@ -48,6 +48,12 @@ class TransactionModule extends Controller
             $activity = $transaction->activity;
             $activity_date = $transaction->activity_date;
 
+            // picture for activity
+            $activity->photo1 = $activity->photo1 == NULL ? "" : url('storage/app/' . $activity->photo1);
+            $activity->photo2 = $activity->photo2 == NULL ? "" : url('storage/app/' . $activity->photo2);
+            $activity->photo3 = $activity->photo3 == NULL ? "" : url('storage/app/' . $activity->photo3);
+            $activity->photo4 = $activity->photo4 == NULL ? "" : url('storage/app/' . $activity->photo4);
+
             $transaction_result = array(
                 'id_transaction' => $transaction->id_transaction,
                 'created_at'     => date("Y-m-d H:i:s", $transaction->created_at->timestamp),
@@ -85,6 +91,12 @@ class TransactionModule extends Controller
             // get the transaction to our results
             $activity = $transaction->activity;
             $activity_date = $transaction->activity_date;
+
+            // picture for activity
+            $activity->photo1 = $activity->photo1 == NULL ? "" : url('storage/app/' . $activity->photo1);
+            $activity->photo2 = $activity->photo2 == NULL ? "" : url('storage/app/' . $activity->photo2);
+            $activity->photo3 = $activity->photo3 == NULL ? "" : url('storage/app/' . $activity->photo3);
+            $activity->photo4 = $activity->photo4 == NULL ? "" : url('storage/app/' . $activity->photo4);
 
             $transaction_result = array(
                 'id_transaction' => $transaction->id_transaction,

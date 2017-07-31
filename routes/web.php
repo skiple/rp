@@ -11,6 +11,22 @@
 |
 */
 
+// contents for api
+Route::get('/storage/app/public/images/{type}/{filename}', function ($type, $filename)
+{
+    $path = storage_path() . '/app/public/images/' . $type . '/' . $filename;
+
+    if(!File::exists($path)) abort(404);
+
+    $file = File::get($path);
+    $type = File::mimeType($path);
+
+    $response = Response::make($file, 200);
+    $response->header("Content-Type", $type);
+
+    return $response;
+});
+
 //to retrieve file
 Route::get('public/images/{type}/{filename}', function ($type, $filename)
 {	

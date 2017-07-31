@@ -34,6 +34,13 @@ class ActivityModule extends Controller
     public function getAllActivity(Request $request)
     {
     	$all_activity = Activity::orderBy('updated_at', 'desc')->get();
+
+        foreach ($all_activity as $activity) {
+            $activity->photo1 = $activity->photo1 == NULL ? "" : url('storage/app/' . $activity->photo1);
+            $activity->photo2 = $activity->photo2 == NULL ? "" : url('storage/app/' . $activity->photo2);
+            $activity->photo3 = $activity->photo3 == NULL ? "" : url('storage/app/' . $activity->photo3);
+            $activity->photo4 = $activity->photo4 == NULL ? "" : url('storage/app/' . $activity->photo4);
+        }
     	$results = array(
     		'activities' => $all_activity,
     	);
@@ -57,6 +64,11 @@ class ActivityModule extends Controller
             $this->response['message']= "No activity found with the specified Activity ID.";
         } else {
             // append the results
+            $activity->photo1 = $activity->photo1 == NULL ? "" : url('storage/app/' . $activity->photo1);
+            $activity->photo2 = $activity->photo2 == NULL ? "" : url('storage/app/' . $activity->photo2);
+            $activity->photo3 = $activity->photo3 == NULL ? "" : url('storage/app/' . $activity->photo3);
+            $activity->photo4 = $activity->photo4 == NULL ? "" : url('storage/app/' . $activity->photo4);
+            
             $dates = $activity->dates;
             foreach ($dates as $date) {
                 $times = $date->times;
