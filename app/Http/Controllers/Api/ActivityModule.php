@@ -89,13 +89,14 @@ class ActivityModule extends Controller
             $activity->photo3 = $activity->photo3 == NULL ? "" : url('storage/app/' . $activity->photo3);
             $activity->photo4 = $activity->photo4 == NULL ? "" : url('storage/app/' . $activity->photo4);
             
-            $dates = $activity->dates()->whereDate('date', '>', date("Y-m-d"));
+            $dates = $activity->dates()->whereDate('date', '>', date("Y-m-d"))->get();
             foreach ($dates as $date) {
                 $times = $date->times;
                 $date['times'] = $times->toArray();
                 $date['participant_left'] = $date->max_participants - $date->transactions()->sum('quantity');
             }
 
+            $activity->dates = $dates;
         	$results = array(
         		'activity' => $activity,
         	);
