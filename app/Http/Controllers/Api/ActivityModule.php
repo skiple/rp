@@ -35,14 +35,34 @@ class ActivityModule extends Controller
     {
     	$all_activity = Activity::orderBy('updated_at', 'desc')->get();
 
+        $activities = array();
+
         foreach ($all_activity as $activity) {
-            $activity->photo1 = $activity->photo1 == NULL ? "" : url('storage/app/' . $activity->photo1);
-            $activity->photo2 = $activity->photo2 == NULL ? "" : url('storage/app/' . $activity->photo2);
-            $activity->photo3 = $activity->photo3 == NULL ? "" : url('storage/app/' . $activity->photo3);
-            $activity->photo4 = $activity->photo4 == NULL ? "" : url('storage/app/' . $activity->photo4);
+            $dates = $activity->dates;
+
+            $removable = true;
+            foreach ($dates as $date) {
+                $cur_date = date("Y-m-d");
+                $n_date = date("Y-m-d", strtotime($date->date));
+                if ($cur_date < $n_date) {
+                    $removable = false;
+                }
+            }
+
+            // check if the activity is valid to be removed from our results:
+            // valid if the date is not expired
+            if (!$removable) {
+                $activity->photo1 = $activity->photo1 == NULL ? "" : url('storage/app/' . $activity->photo1);
+                $activity->photo2 = $activity->photo2 == NULL ? "" : url('storage/app/' . $activity->photo2);
+                $activity->photo3 = $activity->photo3 == NULL ? "" : url('storage/app/' . $activity->photo3);
+                $activity->photo4 = $activity->photo4 == NULL ? "" : url('storage/app/' . $activity->photo4);
+
+                $activities[] = $activity;
+            }
         }
+
     	$results = array(
-    		'activities' => $all_activity,
+    		'activities' => $activities,
     	);
 
     	$this->response['result'] = json_encode($results);
@@ -69,12 +89,13 @@ class ActivityModule extends Controller
             $activity->photo3 = $activity->photo3 == NULL ? "" : url('storage/app/' . $activity->photo3);
             $activity->photo4 = $activity->photo4 == NULL ? "" : url('storage/app/' . $activity->photo4);
             
-            $dates = $activity->dates;
+            $dates = $activity->dates()->whereDate('date', '>', date("Y-m-d"));
             foreach ($dates as $date) {
                 $times = $date->times;
-                $date['times'] = $times;
+                $date['times'] = $times->toArray();
                 $date['participant_left'] = $date->max_participants - $date->transactions()->sum('quantity');
             }
+
         	$results = array(
         		'activity' => $activity,
         	);
