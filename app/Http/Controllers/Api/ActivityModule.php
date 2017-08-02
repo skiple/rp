@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Activity;
 
+use Carbon\Carbon;
+
 class ActivityModule extends Controller
 {
     /**
@@ -92,6 +94,11 @@ class ActivityModule extends Controller
             $dates = $activity->dates()->whereDate('date', '>', date("Y-m-d"))->get();
             foreach ($dates as $date) {
                 $times = $date->times;
+
+                $from_date = Carbon::createFromFormat("Y-m-d", $date->date, "Asia/Jakarta");
+                $to_date = $from_date->addDays($activity->duration - 1);
+                $date['date_to'] = $to_date->format('Y-m-d');
+                
                 $date['times'] = $times->toArray();
                 $date['participant_left'] = $date->max_participants - $date->transactions()->sum('quantity');
             }
