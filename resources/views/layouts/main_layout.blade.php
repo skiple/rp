@@ -29,6 +29,12 @@
             @if(isset(Auth::user()->email))
                 <!-- a already has default padding top 14px. so if padding-top isn't declared here, the padding will be doubled (28px) -->
                 <li><a style="padding-top:0px" href="/logout">logout</a></li>
+                @if(Auth::user()->isAdmin == 1)
+                    <li><a style="padding-top:0px" href="/add_activity">Add Activity</a></li>
+                    <li><a style="padding-top:0px" href="/admin/transactions">List Transaction</a></li>
+                @else
+                    <li><a style="padding-top:0px" href="/transactions">List Transaction</a></li>
+                @endif
             @else
                 <li class="login">Log In</li>
             @endif

@@ -15,7 +15,7 @@
       @foreach($all_transactions as $transaction)
         <tr>
           <td>ID Transaksi 
-            <a href="/detail/transaction/{{$transaction->id_transaction}}">
+            <a href="/admin/detail/transaction/{{$transaction->id_transaction}}">
               {{$transaction->id_transaction}}
             </a>
           </td>
