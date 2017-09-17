@@ -79,6 +79,15 @@ Route::post('postSignIn', [
 	'as' => 'sign_in'
 ]);
 
+Route::get('change_password', [
+	'uses' => 'UserController@changePassword',
+])->middleware('isLoggedIn');
+
+Route::post('postChangePassword', [
+	'uses' => 'UserController@postChangePassword',
+	'as' => 'change_password'
+])->middleware('isLoggedIn');
+
 //Transaction Controller Routes
 Route::get('transactions', [
 	'uses' => 'TransactionController@viewTransactions',

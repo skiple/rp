@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
+use App\Rules\CheckPassword;
+
 
 use Carbon\Carbon;
+use Hash;
 
 class UserController extends Controller
 {
@@ -66,5 +69,28 @@ class UserController extends Controller
     public function logout(Request $request){
     	Auth::logout();
     	return back();
+    }
+
+    public function changePassword(){
+        return view('user.change_password');
+    }
+
+    public function postChangePassword(Request $request){
+        $this->validate($request, [
+            'old_password' => ['required', new CheckPassword],
+            'new_password' => 'required|min:8|confirmed',
+        ]);
+
+        $user = Auth::user();
+
+        if (Hash::check($request["old_password"], $user->password)){
+            $user->password = bcrypt($request["new_password"]);
+            $user->save();
+
+            return redirect('/transactions');
+        }
+        else{
+            return 0;
+        }
     }
 }
