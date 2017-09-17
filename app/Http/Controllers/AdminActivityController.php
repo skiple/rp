@@ -9,6 +9,7 @@ use App\Activity_time;
 
 use Storage;
 use Carbon\Carbon;
+use DB;
 
 class AdminActivityController extends Controller
 {
@@ -118,18 +119,20 @@ class AdminActivityController extends Controller
 
     // Delete activity
     public function deleteActivity($id){
-    	$activity = Activity::where('id_activity', $id)->first();
-    	if($activity->isLocked()==false){
-    		$dates = $activity->dates;
-    		foreach($dates as $date){
-    			$times = $date->times;
-    			foreach($times as $time){
-    				$time->forceDelete();
-    			}
-    			$date->forceDelete();
-    		}
-    		$activity->forceDelete();
-    	}
+    	DB::transaction(function ($id) use ($id) {
+	    	$activity = Activity::where('id_activity', $id)->first();
+	    	if($activity->isLocked()==false){
+	    		$dates = $activity->dates;
+	    		foreach($dates as $date){
+	    			$times = $date->times;
+	    			foreach($times as $time){
+	    				$time->forceDelete();
+	    			}
+	    			$date->forceDelete();
+	    		}
+	    		$activity->forceDelete();
+	    	}
+	    });
     	return redirect('/list_activity');
     }
 
