@@ -31,7 +31,7 @@ class UserController extends Controller
         $token .= $this->generateRandomString(3);
 
         //Add timestamps
-        $token .= Carbon::now()->format('dmYHis');
+        $token .= Carbon::now("Asia/Jakarta")->format('dmYHis');
 
         $token .= $this->generateRandomString(6);
         return $token;
@@ -110,7 +110,7 @@ class UserController extends Controller
         $user->password = bcrypt($request["new_password"]);
         $user->save();
 
-        return redirect('/transactions');
+        return back();
     }
 
     // View forgot password
@@ -143,6 +143,13 @@ class UserController extends Controller
 
     // View reset password
     public function viewResetPassword($token){
+        $token_time = substr($token, -20, 14);
+        $token_time = Carbon::createFromFormat('dmYHis', $token_time, 'Asia/Jakarta');
+        $now = Carbon::now('Asia/Jakarta');
+        if ($now->diffInMinutes($token_time)>15){
+            return "token expired setelah 15 menit";
+        }
+        
         $user = User::where('forgot_password_token', $token)->first();
         if($user){
             $newPassword = $this->generateRandomString(8);
