@@ -95,6 +95,15 @@ Route::get('logout', [
 	'uses' => 'UserController@logout',
 ]);
 
+Route::get('forgot_password', [
+	'uses' => 'UserController@viewForgotPassword',
+]);
+
+Route::post('postForgotPassword', [
+	'uses' => 'UserController@postForgotPassword',
+	'as' => 'forgot_password'
+]);
+
 Route::post('postSignUp', [
 	'uses' => 'UserController@postSignUp',
 	'as' => 'sign_up'
@@ -106,7 +115,7 @@ Route::post('postSignIn', [
 ]);
 
 Route::get('change_password', [
-	'uses' => 'UserController@changePassword',
+	'uses' => 'UserController@viewChangePassword',
 ])->middleware('isLoggedIn');
 
 Route::post('postChangePassword', [

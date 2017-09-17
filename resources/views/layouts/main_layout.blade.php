@@ -74,6 +74,14 @@
                 Sign Up
             </p>
         </div>
+        <div class="parent">
+            <p class="left">
+                Forgot your password?
+            </p>
+            <p id="signup" class="right">
+                <a href="/forgot_password">Forgot password</a>
+            </p>
+        </div>
       </div>
     </div>
 

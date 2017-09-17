@@ -10,10 +10,33 @@ use App\Rules\CheckPassword;
 
 use Carbon\Carbon;
 use Hash;
+use Mail;
 
 class UserController extends Controller
 {
-    //
+    private function generateForgotPasswordToken($id_user){
+        $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $token = '';
+        for ($i = 0; $i < 3; $i++) {
+            $token .= $chars[rand(0, strlen($chars) - 1)];
+        }
+
+        //Add id user for making sure its unique
+        $token .= $id_user;
+
+        for ($i = 0; $i < 3; $i++) {
+            $token .= $chars[rand(0, strlen($chars) - 1)];
+        }
+
+        //Add timestamps
+        $token .= Carbon::now()->format('dmYHis');
+
+        for ($i = 0; $i < 6; $i++) {
+            $token .= $chars[rand(0, strlen($chars) - 1)];
+        }
+        return $token;
+    }
+
     public function postSignUp(Request $request){
     	$this->validate($request, [
 	        'first_name' => 'required|alpha|max:32',
@@ -72,7 +95,7 @@ class UserController extends Controller
     }
 
     // View change password
-    public function changePassword(){
+    public function viewChangePassword(){
         return view('user.change_password');
     }
 
@@ -88,5 +111,33 @@ class UserController extends Controller
         $user->save();
 
         return redirect('/transactions');
+    }
+
+    // View forgot password
+    public function viewForgotPassword(){
+        return view('user.forgot_password');
+    }
+
+    // Post forgot password request
+    public function postForgotPassword(Request $request){
+        $this->validate($request, [
+            'email' => ['required', 'email', 'exists:tb_user,email'],
+        ]);
+
+        $user = User::where('email', $request["email"])->first();
+        $generatedToken = $this->generateForgotPasswordToken($user->id_user);
+        
+        // Save token to DB
+        $user->forgot_password_token = $generatedToken;
+        $user->save();
+        
+        Mail::send('emails.forgot_password', ['user' => $user, 'token' => $generatedToken], function ($m) use ($user, $generatedToken) {
+            $m->from('noreply@rentuff.id', 'Rentuff Admin');
+
+            $name = $user->first_name . " " . $user->last_name;
+            $m->to($user->email, $name)->subject('Forgot password request');
+        });
+
+        return "Silahkan cek email anda";
     }
 }
