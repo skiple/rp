@@ -7,6 +7,6 @@
 	untuk mendapatkan password baru anda.
 	<br><br>
 	Jika link tidak dapat diakses, silahkan buka link di bawah ini:<br>
-	www.rp.rentuff.id/reset_password/{{$token}}
+	rp.rentuff.id/reset_password/{{$token}}
 </body>
 </html>
