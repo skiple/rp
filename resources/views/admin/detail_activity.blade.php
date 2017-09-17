@@ -19,6 +19,17 @@
         <br><br>
         Durasi : {{$activity->duration}}
         <br><br>
+        <?php $i=1; ?>
+        @foreach($activity->dates as $date)
+            {{$i}}. {{$date->date}}
+            @foreach($date->times as $time)
+                <br><br>
+                Day {{$time->day}} <br>
+                Jam mulai : {{$time->time_start}} <br>
+                Jam selesai : {{$time->time_end}} <br>
+            @endforeach
+            <?php $i++ ?>
+        @endforeach
         Harga : {{$activity->price}}
         <br><br>
         Deskripsi : 
