@@ -131,7 +131,7 @@ class UserController extends Controller
         $user->forgot_password_token = $generatedToken;
         $user->save();
         
-        return Mail::send('emails.forgot_password', ['user' => $user, 'token' => $generatedToken], function ($m) use ($user, $generatedToken) {
+        Mail::send('emails.forgot_password', ['user' => $user, 'token' => $generatedToken], function ($m) use ($user, $generatedToken) {
             $m->from('noreply@rentuff.id', 'Rentuff Admin');
 
             $name = $user->first_name . " " . $user->last_name;
