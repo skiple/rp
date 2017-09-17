@@ -64,6 +64,32 @@ Route::post('add_activity', [
 	'as' => 'add_activity'
 ]);
 
+Route::get('/list_activity', [
+	'uses' => 'AdminActivityController@viewListActivity',
+]);
+
+Route::get('admin/delete_activity/{id}', [
+	'uses' => 'AdminActivityController@deleteActivity',
+]);
+
+Route::get('admin/detail/activity/{id}', [
+	'uses' => 'AdminActivityController@viewDetailActivity',
+]);
+
+Route::get('admin/edit_activity_date/{id}', [
+	'uses' => 'AdminActivityController@viewEditActivityDate',
+]);
+
+Route::post('edit_activity', [
+	'uses' => 'AdminActivityController@postEditActivity',
+	'as' => 'edit_activity'
+]);
+
+Route::post('edit_activity_date', [
+	'uses' => 'AdminActivityController@postEditActivityDate',
+	'as' => 'edit_activity_date'
+]);
+
 //User Controller Routes
 Route::get('logout', [
 	'uses' => 'UserController@logout',

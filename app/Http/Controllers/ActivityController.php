@@ -22,9 +22,14 @@ class ActivityController extends Controller
     //view detail activity
     public function viewDetailActivity($id){
     	$activity = Activity::where('id_activity', $id)->first();
-    	$data = array(
-    		'activity' => $activity,
-    	);
-    	return view('user.detail_activity')->with($data);
+        if($activity){
+            $data = array(
+                'activity' => $activity,
+            );
+            return view('user.detail_activity')->with($data);
+        }
+        else{
+            return "Activity tidak ditemukan";
+        }
     }
 }

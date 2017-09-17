@@ -33,6 +33,7 @@
                 @if(Auth::user()->isAdmin == 1)
                     <li><a style="padding-top:0px" href="/add_activity">Add Activity</a></li>
                     <li><a style="padding-top:0px" href="/admin/transactions">List Transaction</a></li>
+                    <li><a style="padding-top:0px" href="/list_activity">List Activity</a></li>
                 @else
                     <li><a style="padding-top:0px" href="/transactions">List Transaction</a></li>
                 @endif

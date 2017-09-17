@@ -71,10 +71,12 @@ class UserController extends Controller
     	return back();
     }
 
+    // View change password
     public function changePassword(){
         return view('user.change_password');
     }
 
+    // Post change password request
     public function postChangePassword(Request $request){
         $this->validate($request, [
             'old_password' => ['required', new CheckPassword],
@@ -82,15 +84,9 @@ class UserController extends Controller
         ]);
 
         $user = Auth::user();
+        $user->password = bcrypt($request["new_password"]);
+        $user->save();
 
-        if (Hash::check($request["old_password"], $user->password)){
-            $user->password = bcrypt($request["new_password"]);
-            $user->save();
-
-            return redirect('/transactions');
-        }
-        else{
-            return 0;
-        }
+        return redirect('/transactions');
     }
 }

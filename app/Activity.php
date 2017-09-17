@@ -46,4 +46,17 @@ class Activity extends Model
     {
         return $this->hasMany('App\Transaction', 'id_activity');
     }
+
+    /**
+     * Get the activity state
+     * Locked state means activity can't be deleted or edited (price, duration)
+     */
+    public function isLocked(){
+        if(count($this->transactions)>0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }

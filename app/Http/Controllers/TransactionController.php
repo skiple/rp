@@ -16,6 +16,7 @@ class TransactionController extends Controller
     	$this->middleware('isLoggedIn');
     }
 
+    // View all transactions made by current user
     public function viewTransactions(Request $request){
     	$current_user_id = $request->user()->id_user;
     	$all_transactions = Transaction::where('id_user', $current_user_id)->orderBy('updated_at', 'desc')->get();

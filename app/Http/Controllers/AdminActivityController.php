@@ -16,6 +16,123 @@ class AdminActivityController extends Controller
     	$this->middleware('isAdmin');
     }
 
+    //view list activity for admin only
+    public function viewListActivity(Request $request){
+    	$all_activity = Activity::orderBy('updated_at', 'desc')->get();
+    	$data = array(
+    		'all_activity' => $all_activity,
+    	);
+    	return view('admin.list_activity')->with($data);
+    }
+
+    //view detail activity for admin only
+    public function viewDetailActivity(Request $request, $id){
+    	$activity = Activity::where('id_activity', $id)->first();
+    	if($activity){
+    		$data = array(
+	    		'activity' => $activity,
+	    	);
+	    	return view('admin.detail_activity')->with($data);
+    	}
+    	else{
+    		return "Activity tidak ditemukan";
+    	}
+    }
+
+    //view edit activity date for admin only if activity isnt locked
+    public function viewEditActivityDate(Request $request, $id){
+    	$activity = Activity::where('id_activity', $id)->first();
+    	if($activity){
+    		if($activity->isLocked()==false){
+	    		$data = array(
+		    		'activity' => $activity,
+		    	);
+		    	return view('admin.edit_activity_date')->with($data);
+		    }
+		    else{
+		    	return "Activity tidak dapat di edit karena sudah punya transaksi";
+		    }
+    	}
+    	else{
+    		return "Activity tidak ditemukan";
+    	}
+    }
+
+    //post edit activity date for admin only if activity isnt locked
+    public function postEditActivityDate(Request $request){
+    	return 1;
+    }
+
+    //post edit activity
+    public function postEditActivity(Request $request){
+    	$this->validate($request, [
+	        'activity_name' => ['required','regex:/^[a-zA-Z ]*$/','max:128'],
+	        'host_name' 	=> ['required','regex:/^[a-zA-Z ]*$/','max:64'],
+	        'host_profile' 	=> 'required',
+	        'description' 	=> 'required',
+	        'photo1' 		=> 'image',
+	        'photo2' 		=> 'image',
+	        'photo3' 		=> 'image',
+	        'photo4' 		=> 'image',
+	        'provide' 		=> 'required',
+	        'location' 		=> 'required|max:100',
+	        'itinerary' 	=> 'required',
+	        'id_activity' 	=> 'required|numeric'
+	    ]);
+
+    	$id = $request["id_activity"];
+    	
+	    $activity = Activity::where('id_activity', $id)->first();
+	    $activity->activity_name	= $request['activity_name'];
+	    $activity->host_name 		= $request['host_name'];
+	    $activity->host_profile 	= $request['host_profile'];
+	    $activity->description 		= $request['description'];
+	    $activity->provide 			= $request['provide'];
+	    $activity->location 		= $request['location'];
+	    $activity->itinerary 		= $request['itinerary'];
+	    $activity->save();
+
+	    //file name
+	    $ext 	= ".jpg";
+
+	    //save the picture
+	    if($request->file('photo1')){
+		    $photo1 = $request->file('photo1')->storeAs('public/images/activities', 
+		    	$id . "-1" . $ext);
+	    }
+	    if($request->file('photo2')){
+	    	$photo2 = $request->file('photo2')->storeAs('public/images/activities', 
+	    		$id . "-2" . $ext);
+	    }
+	    if($request->file('photo3')){
+		    $photo3 = $request->file('photo3')->storeAs('public/images/activities', 
+		    	$id . "-3" . $ext);
+		}
+		if($request->file('photo4')){
+		    $photo4 = $request->file('photo4')->storeAs('public/images/activities', 
+		    	$id . "-4" . $ext);
+		}
+
+	    return redirect('/list_activity');
+    }
+
+    // Delete activity
+    public function deleteActivity($id){
+    	$activity = Activity::where('id_activity', $id)->first();
+    	if($activity->isLocked()==false){
+    		$dates = $activity->dates;
+    		foreach($dates as $date){
+    			$times = $date->times;
+    			foreach($times as $time){
+    				$time->forceDelete();
+    			}
+    			$date->forceDelete();
+    		}
+    		$activity->forceDelete();
+    	}
+    	return redirect('/list_activity');
+    }
+
     //view add activity for admin only
     public function viewAddActivity(Request $request){
     	return view('admin.add_activity');

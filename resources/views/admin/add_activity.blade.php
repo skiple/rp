@@ -11,16 +11,19 @@
       <fieldset>
         <h4 class="fs-title">Berikan Judul Aktivitas</h4>
         <input type="text" name="activity_name"/>
+        <span style="color:red">{{$errors->first('activity_name')}}</span>
       </fieldset>
       <br>
       <fieldset>
         <h4 class="fs-title">Siapa pengisi Aktivitas?</h4>
         <input type="text" name="host_name"/>
+        <span style="color:red">{{$errors->first('host_name')}}</span>
       </fieldset>
       <br>
       <fieldset>
         <h4 class="fs-title">Ceritakan singkat tentang profil pengisi</h4>
         <textarea rows="4" cols="50" name="host_profile"></textarea>
+        <span style="color:red">{{$errors->first('host_profile')}}</span>
       </fieldset>
       <br>
       <fieldset>
@@ -28,10 +31,12 @@
         <input type="radio" name="duration" onclick="change_duration(this);" value="1"> 1 Hari<br>
         <input type="radio" name="duration" onclick="change_duration(this);" value="2"> 2 Hari<br>
         <input type="radio" name="duration" onclick="change_duration(this);" value="3"> 3 Hari<br>
+        <span style="color:red">{{$errors->first('duration')}}</span>
       </fieldset>
       <br>
       <fieldset>
         <h4 class="fs-title">Tanggal Aktivitas</h4>
+        <!-- Validasi tanggal harus pake javascript -->
         <div id="datetime">
         </div>
         <button type='button' onclick="add_date()">Tambah tanggal lainnya</button>
@@ -40,6 +45,7 @@
       <fieldset>
         <h4 class="fs-title">Deskripsi Aktivitas</h4>
         <textarea rows="4" cols="50" name="description"></textarea>
+        <span style="color:red">{{$errors->first('description')}}</span>
       </fieldset>
       <br>
       <fieldset>
@@ -49,37 +55,46 @@
                 <option value="{{$i}}"> {{$i}} Orang </option>
             @endfor
         </select>
+        <span style="color:red">{{$errors->first('max_participants')}}</span>
       </fieldset>
       <br>
       <fieldset>
         <h4 class="fs-title">Photos</h4>
         <input type="file" name="photo1"/>
+        <span style="color:red">{{$errors->first('photo1')}}</span>
         <br>
         <input type="file" name="photo2"/>
+        <span style="color:red">{{$errors->first('photo2')}}</span>
         <br>
         <input type="file" name="photo3"/>
+        <span style="color:red">{{$errors->first('photo3')}}</span>
         <br>
         <input type="file" name="photo4"/>
+        <span style="color:red">{{$errors->first('photo4')}}</span>
         <br>
       </fieldset>
       <fieldset>
         <h4 class="fs-title">Harga</h4>
         Rp. <input id="price" type="text" name="price"/>
+        <span style="color:red">{{$errors->first('price')}}</span>
       </fieldset>
       <br>
       <fieldset>
         <h4 class="fs-title">Apa yang akan disediakan?</h4>
         <textarea rows="4" cols="50" name="provide"></textarea>
+        <span style="color:red">{{$errors->first('provide')}}</span>
       </fieldset>
       <br>
       <fieldset>
         <h4 class="fs-title">Lokasi</h4>
         <textarea rows="4" cols="50" name="location"></textarea>
+        <span style="color:red">{{$errors->first('location')}}</span>
       </fieldset>
       <br>
       <fieldset>
         <h4 class="fs-title">Itinerary</h4>
         <textarea rows="4" cols="50" name="itinerary"></textarea>
+        <span style="color:red">{{$errors->first('itinerary')}}</span>
       </fieldset>
       <br>
       <input type="hidden" id="date_count_hidden" name="date_count" value="">
