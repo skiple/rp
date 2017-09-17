@@ -110,7 +110,7 @@ class UserController extends Controller
         $user->password = bcrypt($request["new_password"]);
         $user->save();
 
-        return back();
+        return redirect('/');
     }
 
     // View forgot password
@@ -149,7 +149,7 @@ class UserController extends Controller
         if ($now->diffInMinutes($token_time)>15){
             return "token expired setelah 15 menit";
         }
-        
+
         $user = User::where('forgot_password_token', $token)->first();
         if($user){
             $newPassword = $this->generateRandomString(8);
@@ -167,5 +167,4 @@ class UserController extends Controller
             return "token salah";
         }
     }
-    
 }
