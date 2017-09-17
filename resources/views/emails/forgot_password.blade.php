@@ -6,6 +6,7 @@
 	<a href="/forgot_password/{{$token}}">disini </a>
 	untuk mendapatkan password baru anda.
 	<br><br>
-	Jika link tidak dapat diakses, silahkan buka www.rp.rentuff.id/forgot_password/{{$token}}
+	Jika link tidak dapat diakses, silahkan buka link di bawah ini:<br>
+	www.rp.rentuff.id/reset_password/{{$token}}
 </body>
 </html>

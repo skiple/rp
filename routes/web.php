@@ -104,6 +104,10 @@ Route::post('postForgotPassword', [
 	'as' => 'forgot_password'
 ]);
 
+Route::get('reset_password/{token}', [
+	'uses' => 'UserController@viewResetPassword',
+]);
+
 Route::post('postSignUp', [
 	'uses' => 'UserController@postSignUp',
 	'as' => 'sign_up'

@@ -14,26 +14,26 @@ use Mail;
 
 class UserController extends Controller
 {
-    private function generateForgotPasswordToken($id_user){
+    private function generateRandomString($length){
         $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $token = '';
-        for ($i = 0; $i < 3; $i++) {
-            $token .= $chars[rand(0, strlen($chars) - 1)];
+        $result = '';
+        for ($i = 0; $i < $length; $i++) {
+            $result .= $chars[rand(0, strlen($chars) - 1)];
         }
+        return $result;
+    }
+    private function generateForgotPasswordToken($id_user){
+        $token .= $this->generateRandomString(3);
 
         //Add id user for making sure its unique
         $token .= $id_user;
 
-        for ($i = 0; $i < 3; $i++) {
-            $token .= $chars[rand(0, strlen($chars) - 1)];
-        }
+        $token .= $this->generateRandomString(3);
 
         //Add timestamps
         $token .= Carbon::now()->format('dmYHis');
 
-        for ($i = 0; $i < 6; $i++) {
-            $token .= $chars[rand(0, strlen($chars) - 1)];
-        }
+        $token .= $this->generateRandomString(6);
         return $token;
     }
 
@@ -131,7 +131,7 @@ class UserController extends Controller
         $user->forgot_password_token = $generatedToken;
         $user->save();
         
-        Mail::send('emails.forgot_password', ['user' => $user, 'token' => $generatedToken], function ($m) use ($user, $generatedToken) {
+        return Mail::send('emails.forgot_password', ['user' => $user, 'token' => $generatedToken], function ($m) use ($user, $generatedToken) {
             $m->from('noreply@rentuff.id', 'Rentuff Admin');
 
             $name = $user->first_name . " " . $user->last_name;
@@ -140,4 +140,25 @@ class UserController extends Controller
 
         return "Silahkan cek email anda";
     }
+
+    // View reset password
+    public function viewResetPassword($token){
+        $user = User::where('forgot_password_token', $token)->first();
+        if($user){
+            $newPassword = $this->generateRandomString(8);
+            
+            $user->password = bcrypt($newPassword);
+            $user->forgot_password_token = "";
+            $user->save();
+
+            $data = array(
+                'password' => $newPassword,
+            );
+            return view('user.forgot_password')->with($data);
+        }
+        else{
+            return "token salah";
+        }
+    }
+    
 }
