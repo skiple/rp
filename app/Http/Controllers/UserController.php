@@ -23,7 +23,7 @@ class UserController extends Controller
         return $result;
     }
     private function generateForgotPasswordToken($id_user){
-        $token .= $this->generateRandomString(3);
+        $token = $this->generateRandomString(3);
 
         //Add id user for making sure its unique
         $token .= $id_user;
