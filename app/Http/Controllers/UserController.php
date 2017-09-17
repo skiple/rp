@@ -154,7 +154,7 @@ class UserController extends Controller
             $data = array(
                 'password' => $newPassword,
             );
-            return view('user.forgot_password')->with($data);
+            return view('user.reset_password')->with($data);
         }
         else{
             return "token salah";
