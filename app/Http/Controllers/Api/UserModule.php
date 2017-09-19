@@ -318,9 +318,6 @@ class UserModule extends Controller
             $user->first_name   = $request["first_name"];
             $user->last_name    = $request["last_name"];
             $user->phone        = $request["phone"];
-            if($request["about_me"]){
-                $user->about_me = $request["about_me"];
-            }
             $user->save();
             
             $results = array(
