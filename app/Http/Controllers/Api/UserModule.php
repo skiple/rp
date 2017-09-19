@@ -293,4 +293,43 @@ class UserModule extends Controller
 
         return response()->json($json,$this->response['code']);
     }
+
+    // Method for update user profile
+    public function editProfile(Request $request){
+        // define variable
+        $results = array();
+
+        // validations for all the variables needed
+        $validator  = Validator::make($request->all(),[
+            'first_name'    => 'required|alpha|max:32',
+            'last_name'     => 'required|alpha|max:32',
+            'phone'         => 'required|numeric',
+        ]);
+
+        if ($validator->fails()) {
+            // validation fails:
+            // create error response
+            $this->response['code']   = 400;
+            $this->response['status']   = 0;
+            $this->response['message']= "Error in validation request";
+            $results = $validator->errors();
+        } else {
+            $user = $request->user();
+            $user->first_name   = $request["first_name"];
+            $user->last_name    = $request["last_name"];
+            $user->phone        = $request["phone"];
+            if($request["about_me"]){
+                $user->about_me = $request["about_me"];
+            }
+            $user->save();
+            
+            $results = array(
+                'user' => $user,
+            );
+        }
+        $this->response['result'] = json_encode($results);
+        $json = $this->logResponse($this->response);
+
+        return response()->json($json,$this->response['code']);
+    }
 }
