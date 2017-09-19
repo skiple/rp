@@ -9,8 +9,11 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 
 use App\User;
+use App\Rules\CheckPassword;
 
 use Carbon\Carbon;
+use Hash;
+use Mail;
 
 class UserModule extends Controller
 {   
@@ -33,6 +36,29 @@ class UserModule extends Controller
         $this->response['method']     = $request->method(); // current http method
         $this->response['action']     = Route::currentRouteAction(); // current action controller handler
         $this->response['parameter']  = json_encode($request->all());
+    }
+
+    private function generateRandomString($length){
+        $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $result = '';
+        for ($i = 0; $i < $length; $i++) {
+            $result .= $chars[rand(0, strlen($chars) - 1)];
+        }
+        return $result;
+    }
+    private function generateForgotPasswordToken($id_user){
+        $token = $this->generateRandomString(3);
+
+        //Add id user for making sure its unique
+        $token .= $id_user;
+
+        $token .= $this->generateRandomString(3);
+
+        //Add timestamps
+        $token .= Carbon::now("Asia/Jakarta")->format('dmYHis');
+
+        $token .= $this->generateRandomString(6);
+        return $token;
     }
 
     public function signUp(Request $request)
@@ -151,6 +177,115 @@ class UserModule extends Controller
             $user = User::find($check->id_user);
             $user->api_token = null;
             $user->save();
+        }
+
+        $this->response['result'] = json_encode($results);
+        $json = $this->logResponse($this->response);
+
+        return response()->json($json,$this->response['code']);
+    }
+
+    // Method to change password
+    public function changePassword(Request $request){
+        // define variable
+        $results = array();
+
+        // validations for all the variables needed
+        $validator  = Validator::make($request->all(),[
+            'old_password' => ['required', new CheckPassword],
+            'new_password' => 'required|min:8|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            // validation fails:
+            // create error response
+            $this->response['code']   = 400;
+            $this->response['status']   = 0;
+            $this->response['message']= "Error in validation request";
+            $results = $validator->errors();
+        } else {
+            $user = $request->user();
+            $user->password = bcrypt($request["new_password"]);
+            $user->save();    
+        }
+
+        $this->response['result'] = json_encode($results);
+        $json = $this->logResponse($this->response);
+
+        return response()->json($json,$this->response['code']);
+    }
+
+    // Method to send forgot password email
+    public function forgotPassword(Request $request){
+        // define variable
+        $results = array();
+
+        // validations for all the variables needed
+        $validator  = Validator::make($request->all(),[
+            'email' => ['required', 'email', 'exists:tb_user,email'],
+        ]);
+
+        if ($validator->fails()) {
+            // validation fails:
+            // create error response
+            $this->response['code']   = 400;
+            $this->response['status']   = 0;
+            $this->response['message']= "Error in validation request";
+            $results = $validator->errors();
+        } else {
+            $user = User::where('email', $request["email"])->first();
+            $generatedToken = $this->generateForgotPasswordToken($user->id_user);
+            
+            // Save token to DB
+            $user->forgot_password_token = $generatedToken;
+            $user->save();
+            
+            Mail::send('emails.forgot_password', ['user' => $user, 'token' => $generatedToken], function ($m) use ($user, $generatedToken) {
+                $m->from('noreply@rentuff.id', 'Rentuff Admin');
+
+                $name = $user->first_name . " " . $user->last_name;
+                $m->to($user->email, $name)->subject('Forgot password request');
+            });
+        }
+        $this->response['result'] = json_encode($results);
+        $json = $this->logResponse($this->response);
+
+        return response()->json($json,$this->response['code']);
+    }
+
+    // Method for reset password
+    public function resetPassword($token){
+        // define variable
+        $results = array();
+
+        // Check if token is expired (15 mins already)
+        $token_time = substr($token, -20, 14);
+        $token_time = Carbon::createFromFormat('dmYHis', $token_time, 'Asia/Jakarta');
+        $now = Carbon::now('Asia/Jakarta');
+        if ($now->diffInMinutes($token_time)>15){
+            // The token is expired
+            $this->response['code']     = 404;
+            $this->response['status']   = -1;
+            $this->response['message']  = "Expired token.";
+        }
+
+        $user = User::where('forgot_password_token', $token)->first();
+        if($user){
+            $newPassword = $this->generateRandomString(8);
+            
+            $user->password = bcrypt($newPassword);
+            $user->forgot_password_token = "";
+            $user->save();
+
+            $results = array(
+                'new_password'  => $newPassword,
+            );
+        }
+        else{
+            // Token isn't found in any of the user data
+            $this->response['code']     = 404;
+            $this->response['status']   = -1;
+            $this->response['message']  = "Invalid token.";
         }
 
         $this->response['result'] = json_encode($results);

@@ -22,6 +22,8 @@ Route::group(['namespace'=>'Api'],function (){
     Route::get('/activity/{id}', 'ActivityModule@getActivity');
     Route::post('/signin', 'UserModule@signIn');
     Route::post('/signup', 'UserModule@signUp');
+    Route::post('/forgot_password', 'UserModule@forgotPassword');
+    Route::get('/reset_password/{token}', 'UserModule@resetPassword');
 });
 
 Route::group(['namespace'=>'Api','middleware'=>['auth:api']], function() {
@@ -34,6 +36,7 @@ Route::group(['namespace'=>'Api','middleware'=>['auth:api']], function() {
 
     // user module routes
 	Route::get('/logout', 'UserModule@signOut');
+    Route::post('/change_password', 'UserModule@changePassword');
 });
 
 Route::group(['namespace'=>'Api','middleware'=>['auth:api','check_admin']], function() {
