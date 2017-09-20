@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Transaction;
 
 class Activity extends Model
 {
@@ -52,7 +53,8 @@ class Activity extends Model
      * Locked state means activity can't be deleted or edited (price, duration)
      */
     public function isLocked(){
-        if(count($this->transactions)>0){
+        $transactions = Transaction::where('id_activity', $this->id_activity)->where('status', '<>', 3)->where('status', '<>', -1)->get();
+        if(count($transactions)>0){
             return true;
         }
         else{

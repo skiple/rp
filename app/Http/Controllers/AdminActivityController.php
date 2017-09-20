@@ -16,7 +16,7 @@ class AdminActivityController extends Controller
     public function __construct(){
     	$this->middleware('isAdmin');
     }
-
+    
     //view list activity for admin only
     public function viewListActivity(Request $request){
     	$all_activity = Activity::orderBy('updated_at', 'desc')->get();
