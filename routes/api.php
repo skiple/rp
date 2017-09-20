@@ -37,6 +37,7 @@ Route::group(['namespace'=>'Api','middleware'=>['auth:api']], function() {
     // user module routes
 	Route::get('/logout', 'UserModule@signOut');
     Route::post('/change_password', 'UserModule@changePassword');
+    Route::get('/get_profile', 'UserModule@getProfile');
     Route::post('/edit_profile', 'UserModule@editProfile');
 });
 

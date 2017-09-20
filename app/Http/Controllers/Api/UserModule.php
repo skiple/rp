@@ -294,6 +294,23 @@ class UserModule extends Controller
         return response()->json($json,$this->response['code']);
     }
 
+    // Method for get user data profile
+    public function getProfile(Request $request){
+        // define variable
+        $results = array();
+
+        $user = $request->user();
+
+        $results = array(
+            'user'  => $user,
+        );
+
+        $this->response['result'] = json_encode($results);
+        $json = $this->logResponse($this->response);
+
+        return response()->json($json,$this->response['code']);
+    }
+
     // Method for update user profile
     public function editProfile(Request $request){
         // define variable
