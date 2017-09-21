@@ -119,21 +119,14 @@ class AdminActivityController extends Controller
 
     // Delete activity
     public function deleteActivity($id){
-    	DB::transaction(function ($id) use ($id) {
-	    	$activity = Activity::where('id_activity', $id)->first();
-	    	if($activity->isLocked()==false){
-	    		$dates = $activity->dates;
-	    		foreach($dates as $date){
-	    			$times = $date->times;
-	    			foreach($times as $time){
-	    				$time->forceDelete();
-	    			}
-	    			$date->forceDelete();
-	    		}
-	    		$activity->forceDelete();
-	    	}
-	    });
-    	return redirect('/list_activity');
+    	$activity = Activity::where('id_activity', $id)->first();
+    	if($activity->deleteDetails()){
+    		$activity->forceDelete();
+    		return redirect('/list_activity');
+    	}
+    	else{
+    		return "Delete Failed";
+    	}
     }
 
     //view add activity for admin only

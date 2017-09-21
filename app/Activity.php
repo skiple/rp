@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Transaction;
+use DB;
+use Exception;
 
 class Activity extends Model
 {
@@ -59,6 +61,32 @@ class Activity extends Model
         }
         else{
             return false;
+        }
+    }
+
+    public function deleteDetails(){
+        try{
+            $id = $this->id_activity;
+            $success = DB::transaction(function ($id) use ($id) {
+                if($this->isLocked()==false){
+                    $dates = $this->dates;
+                    foreach($dates as $date){
+                        $times = $date->times;
+                        foreach($times as $time){
+                            $time->forceDelete();
+                        }
+                        $date->forceDelete();
+                    }
+                    return true;
+                } 
+                else{
+                    return false;
+                }
+            });
+            return $success;
+        }
+        catch (Exception $e){
+            return $e;
         }
     }
 }
