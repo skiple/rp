@@ -53,6 +53,8 @@ class TransactionController extends Controller
 	    $new_transaction->updated_at = Carbon::now('Asia/Jakarta');
 	    $new_transaction->save();
 
+	    // Send email to remind user about payment
+
 	    return redirect('transactions');
     }
 

@@ -7,13 +7,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
 
 use App\User;
 use App\Rules\CheckPassword;
 
+use App\Mail\ForgotPassword;
+
 use Carbon\Carbon;
 use Hash;
-use Mail;
 
 class UserModule extends Controller
 {   
@@ -240,12 +242,16 @@ class UserModule extends Controller
             $user->forgot_password_token = $generatedToken;
             $user->save();
             
-            Mail::send('emails.forgot_password', ['user' => $user, 'token' => $generatedToken], function ($m) use ($user, $generatedToken) {
+            // Concat user's name
+            $name = $user->first_name . " " . $user->last_name;
+
+            Mail::to($user->email, $name)->send(new ForgotPassword($user, $generatedToken));
+            /*Mail::send('emails.forgot_password', ['user' => $user, 'token' => $generatedToken], function ($m) use ($user, $generatedToken) {
                 $m->from('noreply@rentuff.id', 'Rentuff Admin');
 
                 $name = $user->first_name . " " . $user->last_name;
                 $m->to($user->email, $name)->subject('Forgot password request');
-            });
+            });*/
         }
         $this->response['result'] = json_encode($results);
         $json = $this->logResponse($this->response);
