@@ -142,38 +142,52 @@ class TransactionModule extends Controller
             // validate activity id first
             $activity = Activity::find($request['id_activity']);
             if ($activity == NULL) {
-                // transaction data not found
+                // activity data not found
                 $this->response['code']   = 404;
                 $this->response['status'] = -1;
                 $this->response['message']= "No activity found with the specified Activity ID.";
             } else {
-            	// validation success: create new transaction
-    		    $new_transaction = new Transaction();
-    		    $new_transaction->id_activity = $request['id_activity'];
-    		    $new_transaction->id_activity_date = $request['date'];
-    		    $new_transaction->id_user = $request->user()->id_user;
-    		    $new_transaction->quantity = $request['quantity'];
+                $activity_date = Activity_date::where('id_activity_date', $request['date'])->first();
+                if ($activity_date == NULL){
+                    // activity date data not found
+                    $this->response['code']   = 404;
+                    $this->response['status'] = -1;
+                    $this->response['message']= "No activity date found with the specified Activity Date ID.";
+                }
+                else if($activity_date->max_participants < $request['quantity']){
+                    // quantity is more than maximum participants of the event
+                    $this->response['code']   = 404;
+                    $this->response['status'] = -1;
+                    $this->response['message']= "Your desired quantity number exceed the number of maximum participants of the event.";
+                }
+                else{
+                    // validation success: create new transaction
+                    $new_transaction = new Transaction();
+                    $new_transaction->id_activity = $request['id_activity'];
+                    $new_transaction->id_activity_date = $request['date'];
+                    $new_transaction->id_user = $request->user()->id_user;
+                    $new_transaction->quantity = $request['quantity'];
 
-    		    //subtract the max participants
-    		    $activity_date = Activity_date::where('id_activity_date', $request['date'])->first();
-    		    // $activity_date->max_participants -= $request['quantity'];
-    		    $activity_date->save();
+                    //subtract the max participants
+                    $activity_date->max_participants -= $request['quantity'];
+                    $activity_date->save();
 
-    		    $price = $activity->price;
-    		    $total_price = $price * $request['quantity'];
-    		    $new_transaction->total_price = $total_price;
+                    $price = $activity->price;
+                    $total_price = $price * $request['quantity'];
+                    $new_transaction->total_price = $total_price;
 
-    		    $new_transaction->status = 0;
-    		    $new_transaction->created_at = Carbon::now('Asia/Jakarta');
-    		    $new_transaction->save();
+                    $new_transaction->status = 0;
+                    $new_transaction->created_at = Carbon::now('Asia/Jakarta');
+                    $new_transaction->save();
 
-                $user = $request->user();
-                // Send mail
-                Mail::to($user->email)->send(new PaymentReminder($user));
+                    $user = $request->user();
+                    // Send mail
+                    Mail::to($user->email)->send(new PaymentReminder($user));
 
-    		   	$results = array(
-    		   		'transaction' => $new_transaction,
-    		   	);
+                    $results = array(
+                        'transaction' => $new_transaction,
+                    );
+                }
             }
         }
 
