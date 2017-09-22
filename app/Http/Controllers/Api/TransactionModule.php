@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Mail;
+
+use App\Mail\PaymentReminder;
 
 use App\Activity;
 use App\Activity_date;
@@ -163,6 +166,10 @@ class TransactionModule extends Controller
     		    $new_transaction->status = 0;
     		    $new_transaction->created_at = Carbon::now('Asia/Jakarta');
     		    $new_transaction->save();
+
+                $user = $request->user();
+                // Send mail
+                Mail::to($user->email)->send(new PaymentReminder($user);
 
     		   	$results = array(
     		   		'transaction' => $new_transaction,

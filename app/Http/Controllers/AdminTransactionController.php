@@ -38,8 +38,6 @@ class AdminTransactionController extends Controller
         $transaction->updated_at = Carbon::now('Asia/Jakarta');
         $transaction->save();
 
-        // Send email to thank you user for paying
-
         return back();
     }
 
