@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+
+use App\Mail\PaymentAccepted;
+
 
 use App\Transaction;
 
@@ -121,7 +125,7 @@ class AdminTransactionModule extends Controller
 
             $user = $transaction->user;
             // Send mail
-            Mail::to($user->email)->send(new PaymentReminder($user));
+            Mail::to($user->email)->send(new PaymentAccepted($user));
 
             $results = array(
                 'transaction' => $transaction,
