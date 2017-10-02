@@ -23,7 +23,7 @@ Route::group(['namespace'=>'Api'],function (){
     Route::post('/signin', 'UserModule@signIn');
     Route::post('/signup', 'UserModule@signUp');
     Route::post('/forgot_password', 'UserModule@forgotPassword');
-    Route::get('/reset_password/{token}', 'UserModule@resetPassword');
+    Route::post('/reset_password', 'UserModule@resetPassword');
 });
 
 Route::group(['namespace'=>'Api','middleware'=>['auth:api']], function() {

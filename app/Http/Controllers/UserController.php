@@ -140,31 +140,4 @@ class UserController extends Controller
 
         return "Silahkan cek email anda";
     }
-
-    // View reset password
-    public function viewResetPassword($token){
-        $token_time = substr($token, -20, 14);
-        $token_time = Carbon::createFromFormat('dmYHis', $token_time, 'Asia/Jakarta');
-        $now = Carbon::now('Asia/Jakarta');
-        if ($now->diffInMinutes($token_time)>15){
-            return "token expired setelah 15 menit";
-        }
-
-        $user = User::where('forgot_password_token', $token)->first();
-        if($user){
-            $newPassword = $this->generateRandomString(8);
-            
-            $user->password = bcrypt($newPassword);
-            $user->forgot_password_token = "";
-            $user->save();
-
-            $data = array(
-                'password' => $newPassword,
-            );
-            return view('user.reset_password')->with($data);
-        }
-        else{
-            return "token salah";
-        }
-    }
 }
