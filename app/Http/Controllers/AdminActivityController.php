@@ -40,30 +40,6 @@ class AdminActivityController extends Controller
     	}
     }
 
-    //view edit activity date for admin only if activity isnt locked
-    public function viewEditActivityDate(Request $request, $id){
-    	$activity = Activity::where('id_activity', $id)->first();
-    	if($activity){
-    		if($activity->isLocked()==false){
-	    		$data = array(
-		    		'activity' => $activity,
-		    	);
-		    	return view('admin.edit_activity_date')->with($data);
-		    }
-		    else{
-		    	return "Activity tidak dapat di edit karena sudah punya transaksi";
-		    }
-    	}
-    	else{
-    		return "Activity tidak ditemukan";
-    	}
-    }
-
-    //post edit activity date for admin only if activity isnt locked
-    public function postEditActivityDate(Request $request){
-    	return 1;
-    }
-
     //post edit activity
     public function postEditActivity(Request $request){
     	$this->validate($request, [
@@ -91,6 +67,9 @@ class AdminActivityController extends Controller
 	    $activity->provide 			= $request['provide'];
 	    $activity->location 		= $request['location'];
 	    $activity->itinerary 		= $request['itinerary'];
+	    if($request["price"]){
+	    	$activity->price 		= $request['price'];
+	    }
 	    $activity->save();
 
 	    //file name

@@ -76,18 +76,9 @@ Route::get('admin/detail/activity/{id}', [
 	'uses' => 'AdminActivityController@viewDetailActivity',
 ]);
 
-Route::get('admin/edit_activity_date/{id}', [
-	'uses' => 'AdminActivityController@viewEditActivityDate',
-]);
-
 Route::post('edit_activity', [
 	'uses' => 'AdminActivityController@postEditActivity',
 	'as' => 'edit_activity'
-]);
-
-Route::post('edit_activity_date', [
-	'uses' => 'AdminActivityController@postEditActivityDate',
-	'as' => 'edit_activity_date'
 ]);
 
 //User Controller Routes

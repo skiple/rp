@@ -37,6 +37,13 @@
         <textarea rows="4" cols="50" name="description">{{$activity->description}}</textarea>
         <span style="color:red">{{$errors->first('description')}}</span>
         <br><br>
+        @if($activity->isLocked()==false)
+            Harga : 
+            <br>
+            Rp. <input type="text" name="price" value="{{$activity->price}}">
+            <span style="color:red">{{$errors->first('price')}}</span>
+            <br><br>
+        @endif
         Provide :
         <br>
         <textarea rows="4" cols="50" name="provide">{{$activity->provide}}</textarea>
@@ -76,10 +83,6 @@
         <input type="hidden" name="_token" value="{{ Session::token() }}">
         <input type="submit">
     </form>
-    <br><br>
-    @if($activity->isLocked()==false)
-        <a href="/admin/edit_activity_date/{{$activity->id_activity}}">Edit activity date and price</a>
-    @endif
     <br><br>
     <script type="text/javascript">
         function showImage(){
