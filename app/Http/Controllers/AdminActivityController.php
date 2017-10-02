@@ -57,6 +57,18 @@ class AdminActivityController extends Controller
 	        'id_activity' 	=> 'required|numeric'
 	    ]);
 
+	    for($i=1; $i<=$request['date_count']; $i++){
+	    	$this->validate($request, [
+	        	'date_from' . $i => 'required',
+	    	]);
+	    	for($j=1; $j<=$request['duration']; $j++){
+	    		$this->validate($request, [
+		        	'time_start' . $i . '-' . $j => 'required',
+		        	'time_end' . $i . '-' . $j => 'required',
+		    	]);
+	    	}
+	    }
+
     	$id = $request["id_activity"];
     	
 	    $activity = Activity::where('id_activity', $id)->first();
@@ -71,6 +83,46 @@ class AdminActivityController extends Controller
 	    	$activity->price 		= $request['price'];
 	    }
 	    $activity->save();
+
+	    for($i=1; $i<=$request['date_count']; $i++){
+	    	$new_activity_date = new Activity_date();
+	    	$new_activity_date->id_activity = $id;
+
+	    	$req_name = 'max_participants' . $i;
+	    	$new_activity_date->max_participants = $request[$req_name];
+
+	    	//change date from format
+	    	$req_name = 'date_from' . $i;
+	    	$date_from = Carbon::createFromFormat("d F Y", $request[$req_name], "Asia/Jakarta");
+        	$date_from = $date_from->format('Y-m-d');
+	    	$new_activity_date->date = $date_from;
+
+	    	$new_activity_date->created_at = Carbon::now('Asia/Jakarta');
+	    	$new_activity_date->updated_at = Carbon::now('Asia/Jakarta');
+	    	$new_activity_date->save();
+
+	    	for($j=1; $j<=$activity->duration; $j++){
+	    		$new_activity_time = new Activity_time();
+	    		$new_activity_time->id_activity_date = $new_activity_date->id_activity_date;
+	    		$new_activity_time->day = $j;
+
+	    		//change time from format
+	    		$req_name = 'time_start' . $i . '-' . $j;
+		    	$time_start = Carbon::createFromFormat("H:i", $request[$req_name], "Asia/Jakarta");
+        		$time_start = $time_start->format('H:i:s');
+	    		$new_activity_time->time_start = $time_start;
+
+	    		//change time from format
+	    		$req_name = 'time_end' . $i . '-' . $j;
+		    	$time_end = Carbon::createFromFormat("H:i", $request[$req_name], "Asia/Jakarta");
+        		$time_end = $time_end->format('H:i:s');
+	    		$new_activity_time->time_end = $time_end;
+
+	    		$new_activity_time->created_at = Carbon::now('Asia/Jakarta');
+	    		$new_activity_time->updated_at = Carbon::now('Asia/Jakarta');
+	    		$new_activity_time->save();
+	    	}
+	    }
 
 	    //file name
 	    $ext 	= ".jpg";
