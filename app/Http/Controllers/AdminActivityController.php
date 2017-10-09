@@ -11,10 +11,55 @@ use Storage;
 use Carbon\Carbon;
 use DB;
 
+//TEST
+use App\Transaction;
+use App\Mail\FinishTransaction;
+//use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+
 class AdminActivityController extends Controller
 {
     public function __construct(){
     	$this->middleware('isAdmin');
+    }
+
+    //test
+    public function test(){
+    	$counter = 0;
+    	$transactions = Transaction::where('status', 2)->get();
+    	foreach($transactions as $transaction){
+    		$activity_date = $transaction->activity_date;
+    		$activity_time = $activity_date->times->last();
+
+    		$transaction_date	= $activity_date->date; // Activity date (first day)
+    		$time_end 			= $activity_time->time_end; // Activity end time (last day)
+    		$transaction_date = $transaction_date . " " . $time_end; // Append date and time for creating Carbon
+
+    		$transaction_carbon_time = Carbon::createFromFormat("Y-m-d H:i:s", $transaction_date, "Asia/Jakarta");
+
+    		$activity_duration 	= $activity_time->day - 1; // Activity duration (excluding first day)
+
+    		//Finish transaction date --> transaction's activity last day
+    		//Finish transaction time --> the end time of its activity's last day + 1 hour
+    		$transaction_carbon_time->addDays($activity_duration);
+    		$transaction_carbon_time->addHour();
+    		
+    		$current_time = Carbon::now("Asia/Jakarta");
+    		// Compare with current time
+    		$isTransactionFinished = $current_time->gt($transaction_carbon_time);
+
+    		if($isTransactionFinished){
+    			$counter++;
+    			$transaction->status = 3;
+    			$transaction->save();
+
+    			// Send thank you email
+    			$user = $transaction->user;
+    			$activity = $transaction->activity;
+    			Mail::to($user->email)->send(new FinishTransaction($user, $activity));
+    		}
+    	}
+    	return $transactions;
     }
     
     //view list activity for admin only
