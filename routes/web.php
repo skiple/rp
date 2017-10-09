@@ -45,10 +45,6 @@ Route::get('public/images/{type}/{filename}', function ($type, $filename)
     return $response;
 });
 
-Route::get('/test', [
-	'uses' => 'AdminActivityController@test',
-]);
-
 //Activity Controller Routes
 Route::get('/', [
 	'uses' => 'ActivityController@viewActivityCatalog',

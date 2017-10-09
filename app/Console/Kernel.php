@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\CancelUnpaidTransaction::class,
+        Commands\FinishTransaction::class,
     ];
 
     /**
@@ -25,6 +26,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('transaction:cancel_unpaid')
+                 ->hourly();
+        $schedule->command('transaction:finish')
                  ->hourly();
     }
 
