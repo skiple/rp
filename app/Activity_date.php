@@ -54,4 +54,18 @@ class Activity_date extends Model
     {
         return $this->hasMany('App\Transaction', 'id_activity_date');
     }
+
+    /**
+     * Get the activity date state
+     * Locked state means activity date can't be edited
+     */
+    public function isLocked(){
+        $transactions = $this->transactions;
+        if(count($transactions)>0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }

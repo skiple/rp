@@ -66,6 +66,11 @@
                     Jam mulai : {{$time->time_start}} <br>
                     Jam selesai : {{$time->time_end}} <br>
                 @endforeach
+                @if($date->isLocked() == false)
+                    <a href="/admin/edit_activity_date/{{$date->id_activity_date}}">Edit activity date</a><br>
+                @else
+                    <a href="/admin/edit_activity_date/{{$date->id_activity_date}}">Edit activity date (Only participants number)</a><br>
+                @endif
                 <?php $i++ ?>
             @endforeach
             ------------------------------------------------------<br>

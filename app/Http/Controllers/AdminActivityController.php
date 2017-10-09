@@ -148,6 +148,68 @@ class AdminActivityController extends Controller
 	    return redirect('/list_activity');
     }
 
+    //view detail activity date for admin only
+    public function viewEditActivityDate(Request $request, $id){
+    	$activity_date = Activity_date::where('id_activity_date', $id)->first();
+    	if($activity_date){
+    		$data = array(
+	    		'activity_date' => $activity_date,
+	    	);
+	    	return view('admin.edit_activity_date')->with($data);
+    	}
+    	else{
+    		return "Activity date tidak ditemukan";
+    	}
+    }
+
+    //post edit activity date
+    public function postEditActivityDate(Request $request){
+    	$this->validate($request, [
+	        'max_participants' 	=> ['required','numeric'],
+	        'id_activity_date' 	=> ['required'],
+	    ]);
+
+	    $activity_date = Activity_date::where('id_activity_date', $request['id_activity_date'])->first();
+	    if($activity_date->isLocked() == false){
+			$this->validate($request, [
+		        'date' 	=> 'required',
+		    ]);
+
+		    $time_count = count($activity_date->times);
+		    for($j=1; $j<=$time_count; $j++){
+		    	$this->validate($request, [
+		        	'time_start' . $j 	=> 'required',
+		        	'time_end' . $j 	=> 'required',
+		        	'time_id' . $j 		=> 'required',
+		    	]);
+	    	}
+
+	    	//change input date format
+	    	$date = Carbon::createFromFormat("d F Y", $request['date'], "Asia/Jakarta");
+        	$date = $date->format('Y-m-d');
+	    	$activity_date->date = $date;
+
+	    	// Save new activity time
+	    	for($j=1; $j<=$time_count; $j++){
+	    		$reqname = 'time_id' . $j;
+	    		$activity_time = Activity_time::where('id_activity_time', $request[$reqname])->first();
+
+	    		$reqname = 'time_start' . $j;
+	    		$activity_time->time_start = $request[$reqname];
+
+	    		$reqname = 'time_end' . $j;
+	    		$activity_time->time_end = $request[$reqname];
+	    		$activity_time->save();
+	    	}
+	    }
+
+	    $activity_date->max_participants = $request["max_participants"];
+	    $activity_date->save();
+
+	    // Return to its activity detail
+	    return redirect('/admin/detail/activity/' . $activity_date->id_activity);
+    }
+
     // Delete activity
     public function deleteActivity($id){
     	$activity = Activity::where('id_activity', $id)->first();
