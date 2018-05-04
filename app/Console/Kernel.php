@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\CancelUnpaidTransaction::class,
-        Commands\FinishTransaction::class,
+        Commands\UpdateFinishTransaction::class,
     ];
 
     /**

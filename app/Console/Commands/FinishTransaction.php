@@ -10,7 +10,7 @@ use App\Mail\FinishTransaction;
 
 use Carbon\Carbon;
 
-class FinishTransaction extends Command
+class UpdateFinishTransaction extends Command
 {
     /**
      * The name and signature of the console command.
