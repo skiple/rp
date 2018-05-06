@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Activity;
-use App\Activity_date;
-use App\Activity_time;
+use App\ActivityDate;
+use App\ActivityTime;
 
 use Storage;
 use Carbon\Carbon;
@@ -85,7 +85,7 @@ class AdminActivityController extends Controller
 	    $activity->save();
 
 	    for($i=1; $i<=$request['date_count']; $i++){
-	    	$new_activity_date = new Activity_date();
+	    	$new_activity_date = new ActivityDate();
 	    	$new_activity_date->id_activity = $id;
 
 	    	$req_name = 'max_participants' . $i;
@@ -102,7 +102,7 @@ class AdminActivityController extends Controller
 	    	$new_activity_date->save();
 
 	    	for($j=1; $j<=$activity->duration; $j++){
-	    		$new_activity_time = new Activity_time();
+	    		$new_activity_time = new ActivityTime();
 	    		$new_activity_time->id_activity_date = $new_activity_date->id_activity_date;
 	    		$new_activity_time->day = $j;
 
@@ -150,7 +150,7 @@ class AdminActivityController extends Controller
 
     //view detail activity date for admin only
     public function viewEditActivityDate(Request $request, $id){
-    	$activity_date = Activity_date::where('id_activity_date', $id)->first();
+    	$activity_date = ActivityDate::where('id_activity_date', $id)->first();
     	if($activity_date){
     		$data = array(
 	    		'activity_date' => $activity_date,
@@ -169,7 +169,7 @@ class AdminActivityController extends Controller
 	        'id_activity_date' 	=> ['required'],
 	    ]);
 
-	    $activity_date = Activity_date::where('id_activity_date', $request['id_activity_date'])->first();
+	    $activity_date = ActivityDate::where('id_activity_date', $request['id_activity_date'])->first();
 	    if($activity_date->isLocked() == false){
 			$this->validate($request, [
 		        'date' 	=> 'required',
@@ -192,7 +192,7 @@ class AdminActivityController extends Controller
 	    	// Save new activity time
 	    	for($j=1; $j<=$time_count; $j++){
 	    		$reqname = 'time_id' . $j;
-	    		$activity_time = Activity_time::where('id_activity_time', $request[$reqname])->first();
+	    		$activity_time = ActivityTime::where('id_activity_time', $request[$reqname])->first();
 
 	    		$reqname = 'time_start' . $j;
 	    		$activity_time->time_start = $request[$reqname];
@@ -277,7 +277,7 @@ class AdminActivityController extends Controller
 	    $new_activity->save();
 
 	    for($i=1; $i<=$request['date_count']; $i++){
-	    	$new_activity_date = new Activity_date();
+	    	$new_activity_date = new ActivityDate();
 	    	$new_activity_date->id_activity = $new_activity->id_activity;
 	    	$new_activity_date->max_participants = $request['max_participants'];
 
@@ -292,7 +292,7 @@ class AdminActivityController extends Controller
 	    	$new_activity_date->save();
 
 	    	for($j=1; $j<=$request['duration']; $j++){
-	    		$new_activity_time = new Activity_time();
+	    		$new_activity_time = new ActivityTime();
 	    		$new_activity_time->id_activity_date = $new_activity_date->id_activity_date;
 	    		$new_activity_time->day = $j;
 

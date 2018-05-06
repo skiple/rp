@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Activity;
-use App\Activity_date;
+use App\ActivityDate;
 use App\Transaction;
-use App\Transaction_payment;
+use App\TransactionPayment;
 
 use Carbon\Carbon;
 
@@ -40,7 +40,7 @@ class TransactionController extends Controller
 	    $new_transaction->quantity = $request['quantity'];
 
 	    //substract the max participants
-	    $activity_date = Activity_date::where('id_activity_date', $request['date'])->first();
+	    $activity_date = ActivityDate::where('id_activity_date', $request['date'])->first();
 	    $activity_date->max_participants -= $request['quantity'];
 	    $activity_date->save();
 
@@ -74,7 +74,7 @@ class TransactionController extends Controller
 	        'id_transaction' => 'required|numeric',
 	    ]);
 
-	    $new_transaction_payment = new Transaction_payment();
+	    $new_transaction_payment = new TransactionPayment();
 	    $new_transaction_payment->id_transaction = $request['id_transaction'];
 	    $new_transaction_payment->account_name = $request['account_name'];
 	    $new_transaction_payment->from_bank = $request['from_bank'];

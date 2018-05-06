@@ -38,7 +38,7 @@ class Activity extends Model
      */
     public function dates()
     {
-        return $this->hasMany('App\Activity_date', 'id_activity');
+        return $this->hasMany('App\ActivityDate', 'id_activity');
     }
 
     /**
@@ -53,39 +53,35 @@ class Activity extends Model
      * Get the activity state
      * Locked state means activity can't be deleted or edited (price, duration)
      */
-    public function isLocked(){
+    public function isLocked()
+    {
         $transactions = $this->transactions;
-        if(count($transactions)>0){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return (count($transactions) > 0);
     }
 
-    public function deleteDetails(){
-        try{
+    public function deleteDetails()
+    {
+        try {
             $id = $this->id_activity;
-            $success = DB::transaction(function ($id) use ($id) {
-                if($this->isLocked()==false){
+            $success = DB::transaction(function () {
+                if (!$this->isLocked()) {
                     $dates = $this->dates;
-                    foreach($dates as $date){
+                    foreach ($dates as $date) {
                         $times = $date->times;
-                        foreach($times as $time){
+                        foreach ($times as $time) {
                             $time->forceDelete();
                         }
                         $date->forceDelete();
                     }
                     return true;
-                } 
-                else{
+                } else {
                     return false;
                 }
             });
+
             return $success;
-        }
-        catch (Exception $e){
-            return $e;
+        } catch (Exception $e) {
+            throw $e;
         }
     }
 }

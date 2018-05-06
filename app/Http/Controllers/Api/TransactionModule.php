@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\PaymentReminder;
 
 use App\Activity;
-use App\Activity_date;
+use App\ActivityDate;
 use App\Transaction;
-use App\Transaction_payment;
+use App\TransactionPayment;
 
 use Carbon\Carbon;
 
@@ -147,7 +147,7 @@ class TransactionModule extends Controller
                 $this->response['status'] = -1;
                 $this->response['message']= "No activity found with the specified Activity ID.";
             } else {
-                $activity_date = Activity_date::where('id_activity_date', $request['date'])->first();
+                $activity_date = ActivityDate::where('id_activity_date', $request['date'])->first();
                 if ($activity_date == NULL){
                     // activity date data not found
                     $this->response['code']   = 404;
@@ -239,7 +239,7 @@ class TransactionModule extends Controller
                 $this->response['message']= "No transaction found with the specified Transaction ID.";
             } else {
                 // create a new transaction payment
-                $new_transaction_payment = new Transaction_payment();
+                $new_transaction_payment = new TransactionPayment();
                 $new_transaction_payment->id_transaction = $request['id_transaction'];
                 $new_transaction_payment->account_name = $request['account_name'];
                 $new_transaction_payment->from_bank = $request['from_bank'];

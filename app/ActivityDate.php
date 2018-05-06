@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Activity_date extends Model
+class ActivityDate extends Model
 {
     /**
      * The table associated with the model.
@@ -44,7 +44,7 @@ class Activity_date extends Model
      */
     public function times()
     {
-        return $this->hasMany('App\Activity_time', 'id_activity_date');
+        return $this->hasMany('App\ActivityTime', 'id_activity_date');
     }
 
     /**
@@ -59,13 +59,9 @@ class Activity_date extends Model
      * Get the activity date state
      * Locked state means activity date can't be edited
      */
-    public function isLocked(){
+    public function isLocked()
+    {
         $transactions = $this->transactions;
-        if(count($transactions)>0){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return count($transactions) > 0;
     }
 }

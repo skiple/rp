@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 
 use App\Activity;
-use App\Activity_date;
-use App\Activity_time;
+use App\ActivityDate;
+use App\ActivityTime;
 
 use Storage;
 use Carbon\Carbon;
@@ -92,7 +92,7 @@ class AdminActivityModule extends Controller
 		    $new_activity->save();
         	// create new activity
         	for($i=1; $i<=$request['date_count']; $i++){
-		    	$new_activity_date = new Activity_date();
+		    	$new_activity_date = new ActivityDate();
 		    	$new_activity_date->id_activity = $new_activity->id_activity;
 		    	$new_activity_date->max_participants = $request['max_participants'];
 
@@ -107,7 +107,7 @@ class AdminActivityModule extends Controller
 		    	$new_activity_date->save();
 
 		    	for($j=1; $j<=$request['duration']; $j++){
-		    		$new_activity_time = new Activity_time();
+		    		$new_activity_time = new ActivityTime();
 		    		$new_activity_time->id_activity_date = $new_activity_date->id_activity_date;
 		    		$new_activity_time->day = $j;
 

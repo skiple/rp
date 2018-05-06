@@ -44,7 +44,7 @@ class Transaction extends Model
      */
     public function activity_date()
     {
-        return $this->belongsTo('App\Activity_date', 'id_activity_date');
+        return $this->belongsTo('App\ActivityDate', 'id_activity_date');
     }
 
     /**
@@ -60,6 +60,6 @@ class Transaction extends Model
      */
     public function payment()
     {
-        return $this->hasOne('App\Transaction_payment', 'id_transaction');
+        return $this->hasOne('App\TransactionPayment', 'id_transaction');
     }
 }

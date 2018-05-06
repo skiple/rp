@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Activity_time extends Model
+class ActivityTime extends Model
 {
     /**
      * The table associated with the model.
@@ -36,6 +36,6 @@ class Activity_time extends Model
      */
     public function date()
     {
-        return $this->belongsTo('App\Activity_date', 'id_activity_date');
+        return $this->belongsTo('App\ActivityDate', 'id_activity_date');
     }
 }
