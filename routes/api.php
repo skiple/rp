@@ -33,6 +33,7 @@ Route::group(['namespace'=>'Api','middleware'=>['auth:api']], function() {
     Route::post('/transaction', 'TransactionModule@createTransaction');
     Route::get('/transaction/payment/{id}', 'TransactionModule@getPayment');
     Route::post('/transaction/payment', 'TransactionModule@createPayment');
+    Route::get('/payment', 'TransactionModule@getPaymentMethods');
 
     // user module routes
 	Route::get('/logout', 'UserModule@signOut');

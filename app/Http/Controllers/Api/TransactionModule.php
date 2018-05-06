@@ -12,6 +12,7 @@ use App\Mail\PaymentReminder;
 
 use App\Activity;
 use App\ActivityDate;
+use App\PaymentMethod;
 use App\Transaction;
 use App\TransactionPayment;
 
@@ -208,19 +209,32 @@ class TransactionModule extends Controller
         return response()->json($json,$this->response['code']);
     }
 
+    public function getPaymentMethod(Request $request)
+    {
+        $results = array(
+            'payment_methods' => PaymentMethod::all(),
+        );
+
+        $this->response['result'] = json_encode($results);
+        $json = $this->logResponse($this->response);
+
+        return response()->json($json,$this->response['code']);
+    }
+
     public function createPayment(Request $request)
     {
         // validation request
         $results = array();
 
         $validator  = Validator::make($request->all(),[
-            'account_name'   => ['required','regex:/^[a-zA-Z ]*$/','max:64'],
-            'from_bank'      => 'required|max:64',
-            'phone'          => 'required|numeric',
-            'amount'         => 'required',
-            'bank'           => 'required',
-            'transfer_date'  => 'required|date',
-            'id_transaction' => 'required|numeric',
+            'account_name'      => ['required','regex:/^[a-zA-Z ]*$/','max:64'],
+            'from_bank'         => 'required|max:64',
+            'phone'             => 'required|numeric',
+            'amount'            => 'required',
+            'bank'              => 'required',     // TODO soon to be deleted
+            'transfer_date'     => 'required|date',
+            'id_payment_method' => 'required',
+            'id_transaction'    => 'required|numeric',
         ]);
 
         if ($validator->fails()) {
@@ -238,6 +252,10 @@ class TransactionModule extends Controller
                 $this->response['message']= "No transaction found with the specified Transaction ID.";
             } else {
                 // create a new transaction payment
+                
+                // verify if payment method exists
+                $payment_method = PaymentMethod::findOrFail($request['id_payment_method']);
+
                 $new_transaction_payment = new TransactionPayment();
                 $new_transaction_payment->id_transaction = $request['id_transaction'];
                 $new_transaction_payment->account_name = $request['account_name'];
@@ -245,6 +263,7 @@ class TransactionModule extends Controller
                 $new_transaction_payment->phone = $request['phone'];
                 $new_transaction_payment->amount = $request['amount'];
                 $new_transaction_payment->bank = $request['bank'];
+                $new_transaction_payment->id_payment_method = $payment_method->id_payment_method;
 
                 //Change format of transfer date
                 $transfer_date = Carbon::createFromFormat("Y-m-d", $request['transfer_date']);
