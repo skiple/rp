@@ -95,7 +95,7 @@ class ActivityModule extends Controller
             foreach ($dates as $date) {
                 $times = $date->times;
 
-                $from_date = Carbon::createFromFormat("Y-m-d", $date->date, "Asia/Jakarta");
+                $from_date = Carbon::createFromFormat("Y-m-d", $date->date);
                 $to_date = $from_date->addDays($activity->duration - 1);
                 $date['date_to'] = $to_date->format('Y-m-d');
                 

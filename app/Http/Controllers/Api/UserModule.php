@@ -57,7 +57,7 @@ class UserModule extends Controller
         $token .= $this->generateRandomString(3);
 
         //Add timestamps
-        $token .= Carbon::now("Asia/Jakarta")->format('dmYHis');
+        $token .= Carbon::now()->format('dmYHis');
 
         $token .= $this->generateRandomString(6);
         return $token;
@@ -90,12 +90,10 @@ class UserModule extends Controller
 	    	$new_user->email = $request['email'];
 	    	$new_user->phone = $request['phone'];
 
-	        $birthdate = Carbon::createFromFormat("Y-m-d", $request['birthday'], "Asia/Jakarta");
+	        $birthdate = Carbon::createFromFormat("Y-m-d", $request['birthday']);
 	        $birthdate = $birthdate->format('Y-m-d');
 	    	$new_user->birthdate = $birthdate;
 	    	$new_user->password = bcrypt($request['password']);
-	    	$new_user->created_at = Carbon::now('Asia/Jakarta');
-	        $new_user->updated_at = Carbon::now('Asia/Jakarta');
 	        $new_user->api_token = str_random(255);
 
 	    	$new_user->save();
@@ -137,7 +135,6 @@ class UserModule extends Controller
 
         		$user = User::find($request->user()->id_user);
                 $user->api_token	= $api_token;
-                $user->updated_at	= date('Y-m-d H:i:s');
 
                 // Save the entered data
                 $user->save();
@@ -278,8 +275,8 @@ class UserModule extends Controller
 
             // Check if token is expired (15 mins already)
             $token_time = substr($token, -20, 14);
-            $token_time = Carbon::createFromFormat('dmYHis', $token_time, 'Asia/Jakarta');
-            $now = Carbon::now('Asia/Jakarta');
+            $token_time = Carbon::createFromFormat('dmYHis', $token_time);
+            $now = Carbon::now();
             if ($now->diffInMinutes($token_time)>15){
                 // The token is expired
                 $this->response['code']     = 404;

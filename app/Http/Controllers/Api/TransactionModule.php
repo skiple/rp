@@ -177,7 +177,6 @@ class TransactionModule extends Controller
                     $new_transaction->total_price = $total_price;
 
                     $new_transaction->status = 0;
-                    $new_transaction->created_at = Carbon::now('Asia/Jakarta');
                     $new_transaction->save();
 
                     $user = $request->user();
@@ -248,15 +247,11 @@ class TransactionModule extends Controller
                 $new_transaction_payment->bank = $request['bank'];
 
                 //Change format of transfer date
-                $transfer_date = Carbon::createFromFormat("Y-m-d", $request['transfer_date'], "Asia/Jakarta");
+                $transfer_date = Carbon::createFromFormat("Y-m-d", $request['transfer_date']);
                 $transfer_date = $transfer_date->format('Y-m-d');
                 $new_transaction_payment->transfer_date = $transfer_date;
-
-                $new_transaction_payment->created_at = Carbon::now('Asia/Jakarta');
-                $new_transaction_payment->updated_at = Carbon::now('Asia/Jakarta');
                 $new_transaction_payment->save();
 
-                $transaction->updated_at = Carbon::now('Asia/Jakarta');
                 $transaction->status = 1;
                 $transaction->save();
 

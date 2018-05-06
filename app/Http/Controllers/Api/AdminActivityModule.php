@@ -86,9 +86,6 @@ class AdminActivityModule extends Controller
 		    $new_activity->provide 			= $request['provide'];
 		    $new_activity->location 		= $request['location'];
 		    $new_activity->itinerary 		= $request['itinerary'];
-
-		    $new_activity->created_at = Carbon::now('Asia/Jakarta');
-		    $new_activity->updated_at = Carbon::now('Asia/Jakarta');
 		    $new_activity->save();
         	// create new activity
         	for($i=1; $i<=$request['date_count']; $i++){
@@ -98,12 +95,9 @@ class AdminActivityModule extends Controller
 
 		    	//change date from format
 		    	$req_name = 'date_from' . $i;
-		    	$date_from = Carbon::createFromFormat("Y-m-d", $request[$req_name], "Asia/Jakarta");
+		    	$date_from = Carbon::createFromFormat("Y-m-d", $request[$req_name]);
 	        	$date_from = $date_from->format('Y-m-d');
 		    	$new_activity_date->date = $date_from;
-
-		    	$new_activity_date->created_at = Carbon::now('Asia/Jakarta');
-		    	$new_activity_date->updated_at = Carbon::now('Asia/Jakarta');
 		    	$new_activity_date->save();
 
 		    	for($j=1; $j<=$request['duration']; $j++){
@@ -113,18 +107,15 @@ class AdminActivityModule extends Controller
 
 		    		//change time from format
 		    		$req_name = 'time_start' . $i . '-' . $j;
-			    	$time_start = Carbon::createFromFormat("H:i", $request[$req_name], "Asia/Jakarta");
+			    	$time_start = Carbon::createFromFormat("H:i", $request[$req_name]);
 	        		$time_start = $time_start->format('H:i:s');
 		    		$new_activity_time->time_start = $time_start;
 
 		    		//change time from format
 		    		$req_name = 'time_end' . $i . '-' . $j;
-			    	$time_end = Carbon::createFromFormat("H:i", $request[$req_name], "Asia/Jakarta");
+			    	$time_end = Carbon::createFromFormat("H:i", $request[$req_name]);
 	        		$time_end = $time_end->format('H:i:s');
 		    		$new_activity_time->time_end = $time_end;
-
-		    		$new_activity_time->created_at = Carbon::now('Asia/Jakarta');
-		    		$new_activity_time->updated_at = Carbon::now('Asia/Jakarta');
 		    		$new_activity_time->save();
 		    	}
 		    }

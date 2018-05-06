@@ -35,7 +35,6 @@ class AdminTransactionController extends Controller
     public function acceptPayment($id){
         $transaction = Transaction::where('id_transaction', $id)->first();
         $transaction->status = 2;
-        $transaction->updated_at = Carbon::now('Asia/Jakarta');
         $transaction->save();
 
         return back();
@@ -45,7 +44,6 @@ class AdminTransactionController extends Controller
     public function rejectPayment($id){
         $transaction = Transaction::where('id_transaction', $id)->first();
         $transaction->status = 0;
-        $transaction->updated_at = Carbon::now('Asia/Jakarta');
         $transaction->save();
         
         $transaction->payment->forceDelete();

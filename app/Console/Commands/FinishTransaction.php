@@ -43,7 +43,7 @@ class UpdateFinishTransaction extends Command
      */
     public function handle()
     {
-        $current_time = Carbon::now("Asia/Jakarta");
+        $current_time = Carbon::now();
         $this->info('Current datetime: ' . $current_time);
         
         $counter = 0;
@@ -56,7 +56,7 @@ class UpdateFinishTransaction extends Command
             $time_end           = $activity_time->time_end; // Activity end time (last day)
             $transaction_date = $transaction_date . " " . $time_end; // Append date and time for creating Carbon
 
-            $transaction_carbon_time = Carbon::createFromFormat("Y-m-d H:i:s", $transaction_date, "Asia/Jakarta");
+            $transaction_carbon_time = Carbon::createFromFormat("Y-m-d H:i:s", $transaction_date);
 
             $activity_duration  = $activity_time->day - 1; // Activity duration (excluding first day)
 

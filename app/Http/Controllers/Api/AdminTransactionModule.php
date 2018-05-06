@@ -120,7 +120,6 @@ class AdminTransactionModule extends Controller
         } else {
             // update the transaction status
             $transaction->status = 2;
-            $transaction->updated_at = Carbon::now('Asia/Jakarta');
             $transaction->save();
 
             $user = $transaction->user;
@@ -151,7 +150,6 @@ class AdminTransactionModule extends Controller
         } else {
             // update the transaction status
             $transaction->status = 0;
-            $transaction->updated_at = Carbon::now('Asia/Jakarta');
             $transaction->save();
             
             $transaction->payment->forceDelete();
