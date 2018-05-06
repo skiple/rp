@@ -181,7 +181,7 @@ class TransactionModule extends Controller
 
                     $user = $request->user();
                     // Send mail
-                    Mail::to($user->email)->send(new PaymentReminder($user));
+                    Mail::to($user->email)->send(new PaymentReminder($user, $new_transaction));
 
                     $results = array(
                         'transaction' => $new_transaction,

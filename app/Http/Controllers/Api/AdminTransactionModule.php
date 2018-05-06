@@ -124,7 +124,7 @@ class AdminTransactionModule extends Controller
 
             $user = $transaction->user;
             // Send mail
-            Mail::to($user->email)->send(new PaymentAccepted($user));
+            Mail::to($user->email)->send(new PaymentAccepted($user, $transaction));
 
             $results = array(
                 'transaction' => $transaction,
