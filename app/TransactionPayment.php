@@ -38,4 +38,12 @@ class TransactionPayment extends Model
     {
         return $this->belongsTo('App\Transaction', 'id_transaction');
     }
+
+    /**
+     * Get the transaction of the payment.
+     */
+    public function payment_method()
+    {
+        return $this->belongsTo('App\PaymentMethod', 'id_payment_method');
+    }
 }
