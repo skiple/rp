@@ -35,7 +35,7 @@
       </div>
       <div class="form-group">
         <label for="payment_method_photo">Foto Bank</label>
-        <input type="text" class="form-control" id="payment_method_photo" name="payment_method_photo" />
+        <input type="file" name="payment_method_photo" id="payment_method_photo"/>
         <span style="color:red">{{$errors->first('payment_method_photo')}}</span>
       </div>
       <div class="form-group">
