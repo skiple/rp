@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Transaction;
+use App\PaymentMethod;
+use App\Mail\PaymentAccepted;
 
+use Mail;
 use Carbon\Carbon;
 
 class AdminTransactionController extends Controller
@@ -37,6 +40,8 @@ class AdminTransactionController extends Controller
         $transaction->status = 2;
         $transaction->save();
 
+        Mail::to($transaction->user->email)->send(new PaymentAccepted($transaction->user, $transaction));
+
         return back();
     }
 
@@ -48,5 +53,38 @@ class AdminTransactionController extends Controller
         
         $transaction->payment->forceDelete();
         return back();
+    }
+
+    public function viewAddPaymentMethod()
+    {
+        $payment_methods = PaymentMethod::all();
+        $data = array(
+            'payment_methods' => $payment_methods,
+        );
+        return view('admin.payment_methods')->with($data);   
+    }
+
+    public function addPaymentMethod(Request $request)
+    {
+    	$this->validate($request, [
+	        'payment_method_name'  => 'required',
+	        'payment_method_photo' => 'required|image',
+	        'account_number'       => 'required',
+	        'account_name'         => 'required',
+	    ]);
+        
+        $payment_method                      = new PaymentMethod();
+        $payment_method->payment_method_name = $request->payment_method_name;
+        $payment_method->account_number      = $request->account_number;
+        $payment_method->account_name        = $request->account_name;
+        $payment_method->description         = $request->description;
+
+        $payment_method_photo = $request->file('payment_method_photo')->storeAs('public/images/payment_methods', 
+                            $payment_method->payment_method_name . "-bank" . $ext);
+            
+        $payment_method->payment_method_photo = $payment_method_photo;
+        $payment_method->save();
+
+        return redirect('view_add_payment_method');
     }
 }

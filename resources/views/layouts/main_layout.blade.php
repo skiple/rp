@@ -34,6 +34,7 @@
                     <li><a style="padding-top:0px" href="/add_activity">Add Activity</a></li>
                     <li><a style="padding-top:0px" href="/admin/transactions">List Transaction</a></li>
                     <li><a style="padding-top:0px" href="/list_activity">List Activity</a></li>
+                    <li><a style="padding-top:0px" href="{{ route('view_add_payment_method') }}">Metode Pembayaran</a></li>
                 @else
                     <li><a style="padding-top:0px" href="/transactions">List Transaction</a></li>
                 @endif
