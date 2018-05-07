@@ -6,11 +6,11 @@
     <table class="table table-bordered table-striped" id="payment_method_table">
       <thead>
         <tr>
-          <th width="40">ID Payment Method</th>
-          <th width="100">Nama Bank</th>
+          <th width="40">ID</th>
+          <th width="100">Bank</th>
           <th width="100">Foto</th>
-          <th width="100">Pemilik Rekening</th>
           <th width="100">No Rekening</th>
+          <th width="100">Pemilik</th>
         </tr>
       </thead>
       <tbody>
@@ -18,9 +18,9 @@
           <tr>
             <td>{{$payment_method->id_payment_method}}</td>
             <td>{{$payment_method->payment_method_name}}</td>
-            <td><img src="/{{$payment_method->payment_method_photo}}"></td>
+            <td><img src="/{{$payment_method->payment_method_photo}}" style="max-width: 100px;"></td>
+            <td>{{$payment_method->account_number}}</td>
             <td>{{$payment_method->account_name}}</td>
-            <td>{{$payment_method->account_nunber}}</td>
         @endforeach
       </tbody>
     </table>
