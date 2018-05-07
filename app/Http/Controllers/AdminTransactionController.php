@@ -79,8 +79,9 @@ class AdminTransactionController extends Controller
         $payment_method->account_name        = $request->account_name;
         $payment_method->description         = $request->description;
 
+        $ext = $request->file('payment_method_photo')->getClientOriginalExtension();
         $payment_method_photo = $request->file('payment_method_photo')->storeAs('public/images/payment_methods', 
-                            $payment_method->payment_method_name . "-bank" . $ext);
+                            $payment_method->payment_method_name . "-bank." . $ext);
             
         $payment_method->payment_method_photo = $payment_method_photo;
         $payment_method->save();
