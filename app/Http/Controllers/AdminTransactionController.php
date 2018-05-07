@@ -86,6 +86,6 @@ class AdminTransactionController extends Controller
         $payment_method->payment_method_photo = $payment_method_photo;
         $payment_method->save();
 
-        return redirect('view_add_payment_method');
+        return redirect()->route('view_add_payment_method');
     }
 }
