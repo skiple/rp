@@ -55,7 +55,7 @@
       </div>
 
       <input type="hidden" name="_token" value="{{ Session::token() }}">
-      <input type="submit" value="Submit">
+      <input type="submit" class="btn btn-primary" value="Submit">
     </form>
   </div>
 </div>
