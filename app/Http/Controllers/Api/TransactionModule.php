@@ -231,7 +231,6 @@ class TransactionModule extends Controller
             'from_bank'         => 'required|max:64',
             'phone'             => 'required|numeric',
             'amount'            => 'required',
-            'bank'              => 'required',     // TODO soon to be deleted
             'transfer_date'     => 'required|date',
             'id_payment_method' => 'required',
             'id_transaction'    => 'required|numeric',
@@ -262,7 +261,6 @@ class TransactionModule extends Controller
                 $new_transaction_payment->from_bank = $request['from_bank'];
                 $new_transaction_payment->phone = $request['phone'];
                 $new_transaction_payment->amount = $request['amount'];
-                $new_transaction_payment->bank = $request['bank'];
                 $new_transaction_payment->id_payment_method = $payment_method->id_payment_method;
 
                 //Change format of transfer date
