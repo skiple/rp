@@ -54,7 +54,7 @@
         <br><br>
         Jumlah transfer: {{$transaction->payment->amount}}
         <br><br>
-        Bank Tujuan: {{$transaction->payment->bank}}
+        Bank Tujuan: {{$transaction->payment->payment_method->payment_method_name}}
         <br><br>
     @endif
     @if($transaction->status==1)
